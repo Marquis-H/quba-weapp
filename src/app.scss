@@ -1,0 +1,13 @@
+@import '~taro-ui/dist/style/index.scss';
+@import '~taro-icons/scss/FontAwesome.scss';
+
+page {
+    height: 100%;
+    width: 100%;
+    background:rgb(249, 249, 249);
+}
+  
+.container {
+    box-sizing: border-box;
+    background-color:  rgb(249, 249, 249);
+}

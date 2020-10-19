@@ -1,0 +1,78 @@
+$borderColor: #F5F5F5;
+
+.container {
+  height: 100vh;
+    overflow-y: hidden;
+    background-color: #F5F5F5;
+}
+
+.header-bg {
+  width: 100%;
+  height: 300px;
+  background-color: #ffb400;
+}
+
+.userinfo-card {
+  position: absolute;
+  top: 50px;
+  left: 5%;
+  width: 90%;
+  height: 320px;
+  background-color: #fff;
+  border-radius: 20px;
+  z-index: 999;
+
+  .header {
+      width: 100%;
+      height: 55%;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      align-items: center;
+
+      .my-avatar {
+          margin-left: 30px;
+          background-color: #fff;
+      }
+
+      .txt {
+          margin-left: 30px;
+      }
+
+      .arrow {
+          margin-left: 260px;
+      }
+  }
+
+  .footer {
+      width: 100%;
+      height: 45%;
+      border-top: 1px solid $borderColor;
+      box-shadow: 0 30px 45px -20px rgba(0, 0, 0, 0.2);
+      border-radius: 0 0 20px 20px;
+      display: flex;
+
+      .my-btn {
+          flex: 1;
+          height: 100%;
+          background-color: #fff;
+          //  border-right: 1px solid #C0C0C0;
+          display: flex;
+          flex-flow: column;
+          justify-content: center;
+          align-items: center;
+
+          .text {
+              font-size: 30px;
+          }
+
+          &:first-child {
+              border-radius: 0 0 0 20px;
+          }
+
+          &:last-child {
+              border-radius: 0 0 20px 0;
+              //border-right: none;
+          }
+      }
+  }
+}
