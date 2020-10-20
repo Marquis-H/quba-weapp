@@ -60,14 +60,10 @@ class Index extends Component {
 
   render() {
     const { avatar, nickname } = this.state;
-
-    const avatarStyle = {
-      background: `${avatar}`
-    };
     return (
       <View className='container'>
         <View>
-          <View className='header-bg' style={avatarStyle}></View>
+          <View className='header-bg'></View>
           <View className='userinfo-card'>
             <View className='header'>
               <AtAvatar image={avatar} circle className='my-avatar'></AtAvatar>
