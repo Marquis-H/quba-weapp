@@ -6,7 +6,10 @@ const INITIAL_STATE = {
         avatar: images.avatar,
         nickname: null,
         name: null,
-        isLogin: false
+        isLogin: false,
+        orders: 0,
+        applications: 0,
+        teams: 0
     }
 }
 

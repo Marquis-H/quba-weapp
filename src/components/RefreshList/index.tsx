@@ -1,5 +1,5 @@
-declare var React: any;
-import { Component } from '@tarojs/taro'
+/* eslint-disable react/jsx-indent-props */
+import React, { Component } from 'react'
 import { View, Image, ScrollView } from '@tarojs/components'
 import './index.scss'
 

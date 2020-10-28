@@ -1,11 +1,13 @@
 import React, { Component, ComponentClass } from 'react'
 import Taro from "@tarojs/taro";
 import { connect } from 'react-redux'
+import { FontAwesome } from "taro-icons";
 import { View, Text, Button } from '@tarojs/components'
 import { AtAvatar, AtIcon, AtFloatLayout } from "taro-ui";
 import { getProfile } from '../../actions/user'
 import auth from "../../api/auth";
 import withLogin from "../../utils/withLogin";
+import IconNText from "../../components/iconNtext/IconNText";
 import { setToken, setBind } from "../../utils/storageSync";
 
 import './index.scss'
@@ -143,7 +145,7 @@ class Index extends Component {
 
   render() {
     const { isOpened } = this.state;
-    const { avatar, nickname } = this.props.user.profile;
+    const { avatar, nickname, orders, applications, teams } = this.props.user.profile;
     return (
       <View className='container'>
         <View>
@@ -156,18 +158,99 @@ class Index extends Component {
                 <View style='font-size: 12px'>北京理工大学珠海学院</View>
               </View>
               <View style='margin-right:12px; margin-left:auto'>
-                {nickname && <AtIcon onClick={this.onHandleRefreshProfile.bind(this)} value='reload' size='30' color='#6190E8'></AtIcon>}
+                {nickname && <AtIcon onClick={this.onHandleRefreshProfile.bind(this)} value='reload' size='30' color='#ffb400'></AtIcon>}
               </View>
             </View>
             <View className='footer'>
               <View className='my-btn'>
-                <Text className='text'>{710}</Text>
+                <Text className='text'>{orders}</Text>
                 <Text className='text'>总交易数</Text>
               </View>
               <View className='my-btn'>
-                <Text className='text'>{1022}</Text>
+                <Text className='text'>{applications}</Text>
                 <Text className='text'>总发布商品数</Text>
               </View>
+              <View className='my-btn'>
+                <Text className='text'>{teams}</Text>
+                <Text className='text'>组队数</Text>
+              </View>
+            </View>
+          </View>
+          <View className='user-info'>
+            <View className='btn'>
+              <FontAwesome
+                family='solid'
+                name='users'
+                size={24}
+                color='#ffb400'
+              />
+              <Text className='text-v'>组队记录</Text>
+            </View>
+            <View className='btn'>
+              <FontAwesome
+                family='solid'
+                name='box-open'
+                size={24}
+                color='#ffb400'
+              />
+              <Text className='text-v'>发布记录</Text>
+            </View>
+            <View className='btn'>
+              <FontAwesome family='solid' name='star' size={24} color='#ffb400' />
+              <Text className='text-v'>收藏</Text>
+            </View>
+            <View className='btn'>
+              <FontAwesome
+                family='solid'
+                name='dollar-sign'
+                size={24}
+                color='#ffb400'
+              />
+              <Text className='text-v'>我的交易</Text>
+            </View>
+          </View>
+          <View className='user-btns'>
+            <View
+              className='user-btn'
+            >
+              <IconNText>
+                <FontAwesome
+                  family='solid'
+                  name='question'
+                  size={20}
+                  color='#ffb400'
+                />
+                <Text className='text' style='margin-left: 20px'>
+                  常见问题
+              </Text>
+              </IconNText>
+              <AtIcon
+                value='chevron-right'
+                size='20'
+                color='#ffb400'
+                className='arrow'
+              ></AtIcon>
+            </View>
+            <View
+              className='user-btn'
+            >
+              <IconNText>
+                <FontAwesome
+                  family='solid'
+                  name='phone'
+                  size={20}
+                  color='#ffb400'
+                />
+                <Text className='text' style='margin-left: 14px'>
+                  联系我们
+              </Text>
+              </IconNText>
+              <AtIcon
+                value='chevron-right'
+                size='20'
+                color='#ffb400'
+                className='arrow'
+              ></AtIcon>
             </View>
           </View>
         </View>
@@ -181,7 +264,8 @@ class Index extends Component {
             onGetUserInfo={this.handleLogin.bind(this)}
             className='wechat-btn'
           >
-            <Text>微信用戶快速登錄</Text>
+            <FontAwesome family='brands' name='weixin' size={20} color='#fff' />
+            <Text>微信用户快速登录</Text>
           </Button>
           {/* <View
             className='login-m'

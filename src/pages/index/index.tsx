@@ -131,6 +131,12 @@ class Index extends Component {
             <Text className='foot-text'>20 个赛事，120个队伍</Text>
           </View>
         </View>
+        <View className='pkg-bg'>
+          <View className='image'>
+            <Image src={images.loveBanner} className='pkg-img' mode='widthFix'>
+            </Image>
+          </View>
+        </View>
       </View>
     )
   }
