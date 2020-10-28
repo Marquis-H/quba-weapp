@@ -1,6 +1,9 @@
+import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
-import { View } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
+import { AtAvatar } from "taro-ui"
+import commonApi from '../../../api/common'
 
 import './index.scss'
 
@@ -14,7 +17,9 @@ import './index.scss'
 //
 // #endregion
 
-type PageStateProps = {}
+type PageStateProps = {
+  user: any
+}
 
 type PageDispatchProps = {
   add: () => void
@@ -32,23 +37,80 @@ interface Index {
   props: IProps;
 }
 
-@connect(() => ({}), () => ({}))
+@connect(({ user }) => ({ user }), () => ({}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    collegeTitle: '',
+    professionalTitle: ''
   }
 
   componentWillUnmount() { }
 
-  componentDidShow() { }
+  componentDidShow() {
+    const { college, professional } = this.props.user.profile
+    var that = this
+    // colleges
+    commonApi.getColleges().then(res => {
+      if (res.code == 0) {
+        res.data.forEach(element => {
+          if (element['id'] == college) {
+            that.setState({
+              collegeTitle: element['title']
+            })
+          }
+          (element['professionals'] as any).forEach(value => {
+            if (value['id'] == professional) {
+              that.setState({
+                professionalTitle: value['title']
+              })
+            }
+          });
+        });
+      }
+    })
+  }
 
   componentDidHide() { }
 
+  goToEdit() {
+    Taro.navigateTo({
+      url: 'edit/index'
+    })
+  }
+
   render() {
+    const { profile } = this.props.user
+    const { collegeTitle, professionalTitle } = this.state
     return (
       <View className='container'>
-        编辑个人信息
+        <View className='profile-content'>
+          <AtAvatar image={profile.avatar} circle className='my-avatar' size='large'></AtAvatar>
+          <View className='profile-item'>
+            <Text className='text'>姓名</Text>
+            <Text>{profile.name ? profile.name : '空'}</Text>
+          </View>
+          <View className='profile-item'>
+            <Text className='text'>性别</Text>
+            <Text>{profile.gender === 'M' ? '男' : profile.gender === 'F' ? '女' : '空'}</Text>
+          </View>
+          <View className='profile-item'>
+            <Text className='text'>学号</Text>
+            <Text>{profile.sNo ? profile.sNo : '空'}</Text>
+          </View>
+          <View className='profile-item'>
+            <Text className='text'>学院</Text>
+            <Text>{profile.college ? collegeTitle : '空'}</Text>
+          </View>
+          <View className='profile-item'>
+            <Text className='text'>专业</Text>
+            <Text>{profile.professional ? professionalTitle : '空'}</Text>
+          </View>
+          <View className='profile-item'>
+            <Text className='text'>手机号</Text>
+            <Text>{profile.mobile ? profile.mobile : '空'}</Text>
+          </View>
+        </View>
+        <View className='edit-btn' onClick={this.goToEdit}>编辑信息</View>
       </View>
     )
   }

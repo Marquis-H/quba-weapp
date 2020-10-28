@@ -1,16 +1,23 @@
-import { GET_PROFILE } from '../constants/user'
+import { GET_PROFILE, PROFILE_UPDATE } from '../constants/user'
+import * as images from '../images/index';
 
 const INITIAL_STATE = {
     profile: {
-        avatar: null,
+        avatar: images.avatar,
+        nickname: null,
         name: null,
-        number: null
+        isLogin: false
     }
 }
 
 export default function member(state = INITIAL_STATE, action) {
     switch (action.type) {
         case GET_PROFILE:
+            return {
+                ...state,
+                profile: action.profile
+            }
+        case PROFILE_UPDATE:
             return {
                 ...state,
                 profile: action.profile

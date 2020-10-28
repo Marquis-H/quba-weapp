@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import { HTTP_STATUS } from '../const/status'
 import { BaseUrl } from './config'
 import error from '../utils/error'
-import { getToken, setToken, setBind } from '../utils/storageSync'
+import { getToken, setToken } from '../utils/storageSync'
 import login from '../utils/login'
 
 function request(params, method = 'GET') {
@@ -15,10 +15,6 @@ function request(params, method = 'GET') {
     // 判断Token
     if (token) {
         header['Api-Key'] = `${token}`
-    }
-    // 語言
-    if (method == 'GET') {
-        data['_locale'] = 'zh_CN'
     }
     return new Promise<any>((resolve, reject) => {
         Taro.showLoading({
@@ -46,6 +42,19 @@ function request(params, method = 'GET') {
                         })
                         break;
                     case HTTP_STATUS.SUCCESS:
+                        // 无profile 提示新增
+                        if (res.data.code == 400401) {
+                            Taro.showModal({
+                                title: "完善個人資料",
+                                content:
+                                    "为了获得更好体验\n请完善个人资料",
+                                confirmText: "去填写",
+                                showCancel: false
+                            }).then(() => {
+                                Taro.navigateTo({ url: "/packageMe/pages/profile/edit/index" });
+                            });
+                            reject('error')
+                        }
                         resolve(res.data)
                 }
             },
@@ -66,7 +75,6 @@ function reLogin() {
     return new Promise((resolve, reject) => {
         login().then(data => {
             setToken(data.token)
-            setBind(data.isValid)
             // 刷新當前頁面
             resolve(true)
         }).catch(e => {
@@ -79,7 +87,10 @@ function reLogin() {
 // 一些URL忽略token影響
 function igoreUrl(url) {
     const igoreUrlData = [
-        '/v1/security/login'
+        '/v1/security/openid',
+        '/v1/security/check',
+        '/v1/security/bind',
+        '/v1/web/banner'
     ]
     if (igoreUrlData.indexOf(url) == -1) { // 忽略token
         return getToken()

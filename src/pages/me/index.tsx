@@ -1,8 +1,12 @@
 import React, { Component, ComponentClass } from 'react'
+import Taro from "@tarojs/taro";
 import { connect } from 'react-redux'
-import { View, Text } from '@tarojs/components'
-import { AtAvatar, AtIcon } from "taro-ui";
-import * as images from '../../images/index';
+import { View, Text, Button } from '@tarojs/components'
+import { AtAvatar, AtIcon, AtFloatLayout } from "taro-ui";
+import { getProfile } from '../../actions/user'
+import auth from "../../api/auth";
+import withLogin from "../../utils/withLogin";
+import { setToken, setBind } from "../../utils/storageSync";
 
 import './index.scss'
 
@@ -16,19 +20,19 @@ import './index.scss'
 //
 // #endregion
 
-type PageStateProps = {}
+type PageStateProps = {
+  user: any
+}
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
+  onGetProfile: () => void
 }
 
 type PageOwnProps = {}
 
 type PageState = {
-  avatar: String,
-  nickname: String | null
+  isOpened: boolean,
+  isLogin: boolean,
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -37,15 +41,19 @@ interface Index {
   props: IProps;
 }
 
-@connect(() => ({}), () => ({}))
+@connect(({ user }) => ({ user }), (dispatch) => ({
+  onGetProfile() {
+    dispatch(getProfile())
+  },
+}))
+@withLogin('willMount')
 class Index extends Component {
   state = {
-    // eslint-disable-next-line import/no-commonjs
-    avatar: images.avatar,
-    nickname: null
+    isOpened: false,
+    isLogin: false,
   }
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  componentWillMount() {
+    this.props.onGetProfile()
   }
 
   componentWillUnmount() { }
@@ -54,12 +62,88 @@ class Index extends Component {
 
   componentDidHide() { }
 
-  onHandleRefreshProfile() { }
+  onHandleRefreshProfile() {
+    this.props.onGetProfile()
+  }
 
-  goTo() { }
+  goTo = () => {
+    if (!this.state.isLogin && !this.props.user.profile.isLogin) {
+      this.setState({
+        isOpened: true
+      });
+    } else {
+      Taro.navigateTo({
+        url: `/packageMe/pages/profile/index?avatarUrl=${this.props.user.profile.avatarUrl}`
+      });
+    }
+  }
+
+  handleLoginByMobile() {
+    Taro.navigateTo({
+      url: "/packageMe/pages/bind/index"
+    });
+  }
+
+  handleLogin(e) {
+    // 確認授權
+    if (e.detail.errMsg == "getUserInfo:ok") {
+      var userInfo = e.detail.userInfo;
+      var that = this
+      this.setState({
+        // avatarUrl: userInfo.avatarUrl,
+        // username: userInfo.nickName,
+        isOpened: false,
+        isLogin: true
+      });
+      // 登錄
+      Taro.login({
+        success: res => {
+          if (res.code) {
+            // 获取openid
+            auth.getOpenId({ code: res.code }).then(r => {
+              const { openid } = r.data;
+              auth
+                .bindAccount({
+                  openid: openid,
+                  nickname: userInfo.nickName,
+                  avatar: userInfo.avatarUrl
+                })
+                .then(re => {
+                  setToken(re.data.token);
+                  setBind(true);
+                  Taro.showModal({
+                    title: "完善個人資料",
+                    content:
+                      "为了获得更好体验\n请完善个人资料",
+                    confirmText: "去填写",
+                    showCancel: false
+                  }).then(() => {
+                    Taro.navigateTo({ url: "/packageMe/pages/profile/edit/index" });
+                  });
+                  // 获取用户信息
+                  that.onHandleRefreshProfile()
+                })
+                .catch(err => {
+                  console.log("登录失败！" + err.message);
+                });
+            });
+          } else {
+            console.log("登录失败！" + res.errMsg);
+          }
+        }
+      });
+    }
+  }
+
+  handleClose() {
+    this.setState({
+      isOpened: false
+    });
+  }
 
   render() {
-    const { avatar, nickname } = this.state;
+    const { isOpened } = this.state;
+    const { avatar, nickname } = this.props.user.profile;
     return (
       <View className='container'>
         <View>
@@ -68,7 +152,7 @@ class Index extends Component {
             <View className='header'>
               <AtAvatar image={avatar} circle className='my-avatar'></AtAvatar>
               <View className='txt' onClick={this.goTo}>
-                {nickname ? nickname : "登录 / 注册"}
+                {nickname ? nickname : "登录 / 绑定"}
                 <View style='font-size: 12px'>北京理工大学珠海学院</View>
               </View>
               <View style='margin-right:12px; margin-left:auto'>
@@ -87,6 +171,25 @@ class Index extends Component {
             </View>
           </View>
         </View>
+        <AtFloatLayout
+          isOpened={isOpened}
+          onClose={this.handleClose.bind(this)}
+        >
+          <Button
+            type='primary'
+            openType='getUserInfo'
+            onGetUserInfo={this.handleLogin.bind(this)}
+            className='wechat-btn'
+          >
+            <Text>微信用戶快速登錄</Text>
+          </Button>
+          {/* <View
+            className='login-m'
+            onClick={this.handleLoginByMobile.bind(this)}
+          >
+            輸入手機號碼登錄/註冊
+          </View> */}
+        </AtFloatLayout>
       </View>
     )
   }

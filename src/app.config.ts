@@ -10,7 +10,8 @@ export default {
       root: 'packageMe',
       pages: [
         'pages/bind/index', // 绑定
-        'pages/profile/index', // 个人信息编辑
+        'pages/profile/index', // 个人信息
+        'pages/profile/edit/index', // 个人信息编辑
         'pages/publish/index', // 我发布的商品
         'pages/team/index', // 我参与的队伍
         'pages/trade/index', // 我的交易

@@ -1,1 +1,2 @@
 export const GET_PROFILE = 'GET_PROFILE'
+export const PROFILE_UPDATE = 'PROFILE_UPDATE'
