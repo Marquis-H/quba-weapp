@@ -1,5 +1,5 @@
 import { GET_PROFILE, PROFILE_UPDATE } from '../constants/user'
-import * as images from '../images/index';
+import * as images from '../../static/images/index';
 
 const INITIAL_STATE = {
     profile: {

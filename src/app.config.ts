@@ -40,6 +40,13 @@ export default {
         'pages/detail/index', // 闲置详情
       ]
     },
+    {
+      root: 'packageLove',
+      pages: [
+        'pages/list/index', // 表白墙
+        'pages/application/index', // 表白
+      ]
+    }
   ],
   window: {
     backgroundTextStyle: 'dark',

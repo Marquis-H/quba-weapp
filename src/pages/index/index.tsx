@@ -1,8 +1,9 @@
+import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, Swiper, SwiperItem, Image } from '@tarojs/components'
 import { AtIcon } from 'taro-ui';
-import * as images from '../../images/index';
+import * as images from '../../../static/images/index';
 
 import './index.scss'
 
@@ -88,6 +89,24 @@ class Index extends Component {
 
   componentDidHide() { }
 
+  toIdle() {
+    Taro.switchTab({
+      url: "/pages/idle/index"
+    })
+  }
+
+  toTeam() {
+    Taro.switchTab({
+      url: "/pages/team/index"
+    })
+  }
+
+  toLove() {
+    Taro.navigateTo({
+      url: "/packageLove/pages/list/index"
+    })
+  }
+
   render() {
     const { banners } = this.state
 
@@ -113,7 +132,7 @@ class Index extends Component {
             }
           </Swiper>
         </View>
-        <View className='pkg-bg'>
+        <View className='pkg-bg' onClick={this.toIdle}>
           <View className='image'>
             <Image src={images.idleBanner} className='pkg-img' mode='widthFix'>
             </Image>
@@ -122,7 +141,7 @@ class Index extends Component {
             <Text className='foot-text'>已上架 999 個商品</Text>
           </View>
         </View>
-        <View className='pkg-bg'>
+        <View className='pkg-bg' onClick={this.toTeam}>
           <View className='image'>
             <Image src={images.teamBanner} className='pkg-img' mode='widthFix'>
             </Image>
@@ -131,7 +150,7 @@ class Index extends Component {
             <Text className='foot-text'>20 个赛事，120个队伍</Text>
           </View>
         </View>
-        <View className='pkg-bg'>
+        <View className='pkg-bg' onClick={this.toLove}>
           <View className='image'>
             <Image src={images.loveBanner} className='pkg-img' mode='widthFix'>
             </Image>

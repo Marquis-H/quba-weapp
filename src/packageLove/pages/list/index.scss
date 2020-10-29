@@ -1,0 +1,39 @@
+.container {
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+}
+
+.add{
+  position: fixed;
+    right: .68267rem;
+    bottom: .68267rem;
+    z-index: 1100;
+}
+
+.cai{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.at-fab {
+  background-color: #ffb400;
+}
+
+.input {
+  margin-left: 0px;
+  padding-left: 20px;
+  //box-shadow: inset 0 0px 45px -20px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  //border-radius: 12px;
+}
+
+.at-float-layout__container {
+  min-height: 460px;
+  max-height: 240px;
+}
+
+.tips{
+  color: #ff3333;
+  padding-top: 5px;
+}
