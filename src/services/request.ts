@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import { HTTP_STATUS } from '../const/status'
 import { BaseUrl } from './config'
 import error from '../utils/error'
-import { getToken, setToken } from '../utils/storageSync'
+import { getToken, setBind, setToken } from '../utils/storageSync'
 import login from '../utils/login'
 
 function request(params, method = 'GET') {
@@ -39,6 +39,12 @@ function request(params, method = 'GET') {
                             request(params, method).then(newData => {
                                 resolve(newData)
                             }) // 再次情况
+                        }).catch(err => {
+                            if (err == '未綁定！') {
+                                Taro.showModal({ title: '登录提醒', content: '当前操作需要登陆后继续操作', confirmText: '前往登录', showCancel: false }).then(() => {
+                                    Taro.switchTab({ url: '/pages/me/index' })
+                                })
+                            }
                         })
                         break;
                     case HTTP_STATUS.SUCCESS:
@@ -74,12 +80,12 @@ function reLogin() {
     // 登錄
     return new Promise((resolve, reject) => {
         login().then(data => {
-            setToken(data.token)
+            setToken(data)
             // 刷新當前頁面
             resolve(true)
         }).catch(e => {
             error.logError('api', '请求接口出现问题', e)
-            reject(false)
+            reject(e)
         })
     })
 }
@@ -87,10 +93,10 @@ function reLogin() {
 // 一些URL忽略token影響
 function igoreUrl(url) {
     const igoreUrlData = [
-        '/v1/security/openid',
-        '/v1/security/check',
-        '/v1/security/bind',
-        '/v1/web/banner'
+        '/security/openid',
+        '/security/check',
+        '/security/bind',
+        '/web/banner'
     ]
     if (igoreUrlData.indexOf(url) == -1) { // 忽略token
         return getToken()

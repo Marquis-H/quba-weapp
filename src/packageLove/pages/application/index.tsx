@@ -125,7 +125,6 @@ class Index extends Component {
       return;
     }
 
-    console.log(this.state)
     var genderValue = genderSelector[gender]['value'];
     var taGenderValue = genderSelector[taGender]['value'];
 
@@ -138,9 +137,7 @@ class Index extends Component {
       content: content
     }).then(res => {
       if (res.code == 0) {
-        Taro.navigateTo({
-          url: "/packageLove/pages/list/index"
-        })
+        Taro.navigateBack()
       } else {
         Taro.atMessage({
           'message': res.message,

@@ -8,7 +8,7 @@ import { getProfile } from '../../actions/user'
 import auth from "../../api/auth";
 import withLogin from "../../utils/withLogin";
 import IconNText from "../../components/iconNtext/IconNText";
-import { setToken, setBind } from "../../utils/storageSync";
+import { setToken, setBind, getBind } from "../../utils/storageSync";
 
 import './index.scss'
 
@@ -69,7 +69,7 @@ class Index extends Component {
   }
 
   goTo = () => {
-    if (!this.state.isLogin && !this.props.user.profile.isLogin) {
+    if (!this.state.isLogin && !this.props.user.profile.isLogin && !getBind()) {
       this.setState({
         isOpened: true
       });
@@ -187,7 +187,7 @@ class Index extends Component {
             <View className='header'>
               <AtAvatar image={avatar} circle className='my-avatar'></AtAvatar>
               <View className='txt' onClick={this.goTo}>
-                {nickname ? nickname : "登录 / 绑定"}
+                {nickname && getBind() ? nickname : "登录 / 绑定"}
                 <View style='font-size: 12px'>北京理工大学珠海学院</View>
               </View>
               <View style='margin-right:12px; margin-left:auto'>

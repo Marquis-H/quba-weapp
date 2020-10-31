@@ -5,6 +5,7 @@ import { View, Text, ScrollView } from '@tarojs/components'
 import { AtFab, AtFloatLayout, AtInput, AtButton, AtTimeline } from 'taro-ui'
 import Item from "./components/item";
 import loveApi from '../../../api/love'
+import withLogin from "../../../utils/withLogin";
 
 import './index.scss'
 
@@ -37,6 +38,7 @@ interface Index {
 }
 
 @connect(() => ({}), () => ({}))
+@withLogin('didMount')
 class Index extends Component {
   state = {
     isOpened: false,
@@ -46,14 +48,17 @@ class Index extends Component {
     guessValue: "",
     tips: null,
     comments: [],
-    commentValue: ""
+    commentValue: "",
+    loading: false,
+    commentLoading: false
   }
 
-  componentWillMount() {
+  componentDidMount() {
     loveApi.getLoveList().then(res => {
       if (res.code == 0) {
         this.setState({
-          loves: res.data
+          loves: res.data,
+          loading: true
         })
       }
     })
@@ -127,12 +132,16 @@ class Index extends Component {
   onHandleComment = (index) => {
     const { loves } = this.state
     var id = loves[index]["id"]
+    this.setState({
+      commentLoading: false
+    })
     loveApi.getComment({ id: id }).then(res => {
       if (res.code == 0) {
         this.setState({
           comments: this.changeCommentData(res.data),
           isCommentOpened: true,
-          love: loves[index]
+          love: loves[index],
+          commentLoading: true
         })
       }
     })
@@ -149,9 +158,11 @@ class Index extends Component {
     if (commentValue != "") {
       loveApi.addComment({ id: love["id"], comment: commentValue }).then(res => {
         if (res.code == 0) {
+          love['comments'] = love['comments'] + 1
           this.setState({
             comments: this.changeCommentData(res.data),
-            commentValue: ""
+            commentValue: "",
+            love: love
           })
         }
       })
@@ -173,7 +184,7 @@ class Index extends Component {
   }
 
   render() {
-    const { isOpened, loves, love, tips, guessValue, isCommentOpened, comments, commentValue } = this.state
+    const { commentLoading, loading, isOpened, loves, love, tips, guessValue, isCommentOpened, comments, commentValue } = this.state
 
     const scrollStyle = {
       height: '150px'
@@ -195,6 +206,9 @@ class Index extends Component {
               />
             )
           })
+        }
+        {
+          loading && loves.length == 0 && <View style='text-align:center'>无记录</View>
         }
         <View className='cai-container'>
           <AtFloatLayout isOpened={isOpened} title='猜名字' onClose={this.handleClose.bind(this)}>
@@ -229,9 +243,10 @@ class Index extends Component {
               items={comments}
             >
             </AtTimeline>
+            {commentLoading && comments.length == 0 && <View style='text-align:center'>无记录</View>}
           </ScrollView>
           <AtInput
-            name='name'
+            name='comment'
             type='text'
             value={commentValue}
             placeholder='请留言'

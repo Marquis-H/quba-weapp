@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { View, Image, Text } from '@tarojs/components'
 import { AtTabs, AtTabsPane, AtTag, AtSwipeAction } from 'taro-ui'
 import Item from "../../../packageLove/pages/list/components/item";
+import loveApi from '../../../api/love'
 
 import './index.scss'
 
@@ -16,7 +17,9 @@ import './index.scss'
 //
 // #endregion
 
-type PageStateProps = {}
+type PageStateProps = {
+  user: any
+}
 
 type PageDispatchProps = {
   add: () => void
@@ -24,7 +27,9 @@ type PageDispatchProps = {
   asyncAdd: () => any
 }
 
-type PageOwnProps = {}
+type PageOwnProps = {
+
+}
 
 type PageState = {}
 
@@ -34,26 +39,23 @@ interface Index {
   props: IProps;
 }
 
-@connect(() => ({}), () => ({}))
+@connect(({ user }) => ({ user }), () => ({}))
 class Index extends Component {
   state = {
     current: 0,
-    loves: [
-      {
-        id: 1,
-        nickname: "Marquis",
-        name: "侯德善",
-        gender: "M",
-        taName: "小君君",
-        taGender: "F",
-        content: "我爱你",
-        like: 2,
-        guess: 4,
-        guessRight: 1,
-        comments: 2,
-        createdAt: "2020-10-29 23:52:24"
+    loves: [],
+    lovesLoading: false
+  }
+
+  componentWillMount() {
+    loveApi.getLoveList({ id: this.props.user['profile']['pid'] }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          loves: res.data,
+          lovesLoading: true
+        })
       }
-    ]
+    })
   }
 
   handleClick(value) {
@@ -72,6 +74,8 @@ class Index extends Component {
         }
       }
     ]
+    const { lovesLoading } = this.state
+
     return (
       <View className='container publish'>
         <AtTabs swipeable={false} current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
@@ -124,6 +128,7 @@ class Index extends Component {
                 )
               })
             }
+            {lovesLoading && this.state.loves.length == 0 && <View style='text-align:center'>无记录</View>}
           </AtTabsPane>
         </AtTabs>
       </View>
