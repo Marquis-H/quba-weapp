@@ -1,6 +1,7 @@
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View } from '@tarojs/components'
+import { AtTabs, AtTabsPane, AtList, AtListItem } from "taro-ui"
 
 import './index.scss'
 
@@ -34,21 +35,36 @@ interface Index {
 
 @connect(() => ({}), () => ({}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    current: 0
   }
 
-  componentWillUnmount() { }
-
-  componentDidShow() { }
-
-  componentDidHide() { }
+  handleClick(value) {
+    this.setState({
+      current: value
+    })
+  }
 
   render() {
+    const tabList = [{ title: '我的购买' }, { title: '我的出售' }]
+
     return (
       <View className='container'>
-        我的交易
+        <AtTabs current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
+          <AtTabsPane current={this.state.current} index={0} className='tab-content'>
+            <AtList>
+              <AtListItem title='笔记本电脑' className='doing' extraText='进行中' arrow='right' />
+              <AtListItem title='闹钟' className='cancel' extraText='取消' arrow='right' />
+              <AtListItem title='闹钟' className='done' extraText='交易完成' arrow='right' />
+            </AtList>
+          </AtTabsPane>
+          <AtTabsPane current={this.state.current} index={1} className='tab-content'>
+            <AtList>
+              <AtListItem title='笔记本电脑' className='doing' extraText='进行中' arrow='right' />
+              <AtListItem title='闹钟' className='cancel' extraText='取消' arrow='right' />
+            </AtList>
+          </AtTabsPane>
+        </AtTabs>
       </View>
     )
   }

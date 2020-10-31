@@ -143,6 +143,39 @@ class Index extends Component {
     });
   }
 
+  toPage(name) {
+    Taro.navigateTo({
+      url: '/pages/page/index?title=' + name
+    })
+  }
+
+  // 组队记录
+  toTeam = () => {
+    Taro.navigateTo({
+      url: '/packageMe/pages/team/index'
+    })
+  }
+
+  // 发布记录
+  toPublish = () => {
+    Taro.navigateTo({
+      url: '/packageMe/pages/publish/index'
+    })
+  }
+
+  // 发布记录
+  toCollect = () => {
+    Taro.navigateTo({
+      url: '/packageMe/pages/collect/index'
+    })
+  }
+
+  toTrade = () => {
+    Taro.navigateTo({
+      url: '/packageMe/pages/trade/index'
+    })
+  }
+
   render() {
     const { isOpened } = this.state;
     const { avatar, nickname, orders, applications, teams } = this.props.user.profile;
@@ -177,7 +210,7 @@ class Index extends Component {
             </View>
           </View>
           <View className='user-info'>
-            <View className='btn'>
+            <View className='btn' onClick={this.toTeam}>
               <FontAwesome
                 family='solid'
                 name='users'
@@ -186,7 +219,7 @@ class Index extends Component {
               />
               <Text className='text-v'>组队记录</Text>
             </View>
-            <View className='btn'>
+            <View className='btn' onClick={this.toPublish}>
               <FontAwesome
                 family='solid'
                 name='box-open'
@@ -195,11 +228,11 @@ class Index extends Component {
               />
               <Text className='text-v'>发布记录</Text>
             </View>
-            <View className='btn'>
+            <View className='btn' onClick={this.toCollect}>
               <FontAwesome family='solid' name='star' size={24} color='#ffb400' />
               <Text className='text-v'>收藏</Text>
             </View>
-            <View className='btn'>
+            <View className='btn' onClick={this.toTrade}>
               <FontAwesome
                 family='solid'
                 name='dollar-sign'
@@ -212,6 +245,7 @@ class Index extends Component {
           <View className='user-btns'>
             <View
               className='user-btn'
+              onClick={this.toPage.bind(this, "常见问题")}
             >
               <IconNText>
                 <FontAwesome
@@ -233,6 +267,7 @@ class Index extends Component {
             </View>
             <View
               className='user-btn'
+              onClick={this.toPage.bind(this, "联系我们")}
             >
               <IconNText>
                 <FontAwesome

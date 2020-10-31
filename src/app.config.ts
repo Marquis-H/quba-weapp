@@ -3,7 +3,8 @@ export default {
     'pages/index/index', // 首页
     'pages/idle/index', // 二手闲置
     'pages/team/index', // 组队
-    'pages/me/index' // 我的
+    'pages/me/index', // 我的
+    'pages/page/index' // 页面
   ],
   subPackages: [
     {
@@ -15,6 +16,7 @@ export default {
         'pages/publish/index', // 我发布的商品
         'pages/team/index', // 我参与的队伍
         'pages/trade/index', // 我的交易
+        'pages/collect/index' // 收藏
       ]
     },
     {

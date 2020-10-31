@@ -1,8 +1,7 @@
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Image, Text } from '@tarojs/components'
-import { AtTabs, AtTabsPane, AtTag, AtSwipeAction } from 'taro-ui'
-import Item from "../../../packageLove/pages/list/components/item";
+import { AtTabs, AtTabsPane, AtSwipeAction, AtTag } from 'taro-ui'
 
 import './index.scss'
 
@@ -37,23 +36,7 @@ interface Index {
 @connect(() => ({}), () => ({}))
 class Index extends Component {
   state = {
-    current: 0,
-    loves: [
-      {
-        id: 1,
-        nickname: "Marquis",
-        name: "侯德善",
-        gender: "M",
-        taName: "小君君",
-        taGender: "F",
-        content: "我爱你",
-        like: 2,
-        guess: 4,
-        guessRight: 1,
-        comments: 2,
-        createdAt: "2020-10-29 23:52:24"
-      }
-    ]
+    current: 0
   }
 
   handleClick(value) {
@@ -62,46 +45,47 @@ class Index extends Component {
     })
   }
 
+  handleRemove = () => {
+
+  }
+
   render() {
-    const tabList = [{ title: '二手闲置' }, { title: '表白墙' }]
+    const tabList = [{ title: '二手交易' }, { title: '比赛' }]
     const options = [
       {
-        text: '删除',
+        text: '取消',
         style: {
           backgroundColor: '#FF4949'
         }
       }
     ]
     return (
-      <View className='container publish'>
+      <View className='collect'>
         <AtTabs swipeable={false} current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
           <AtTabsPane current={this.state.current} index={0} className='tab-content'>
-            <AtSwipeAction options={options}>
-              <View className='post'>
-                <View className='post-body'>
-                  <View className='content'>
-                    <View className='at-row'>
-                      <View className='at-col at-col-1 at-col--auto'>
-                        <Image mode='aspectFill' className='img' src='http://yanxuan.nosdn.127.net/65091eebc48899298171c2eb6696fe27.jpg' />
-                      </View>
-                      <View className='at-col info'>
-                        <View className='title'>
-                          出售笔记本电脑
-                            </View>
-                        <View className='desp'>
-                          有意购买者：xxxx
-                      </View>
+            <AtSwipeAction autoClose onClick={this.handleRemove} options={options}>
+              <View className='content idle'>
+                <View className='at-row'>
+                  <View className='at-col at-col-1 at-col--auto'>
+                    <Image mode='aspectFill' className='img' src='http://yanxuan.nosdn.127.net/65091eebc48899298171c2eb6696fe27.jpg' />
+                  </View>
+                  <View className='at-col info'>
+                    <View className='content'>
+                      <View className='left-side'>
                         <View>
-                          <AtTag
-                            size='small'
-                            type='primary'
-                            circle
-                            active
-                          >进行中</AtTag>
+                          出售手机和笔记本
                         </View>
                         <View style='color: #f7454e'>
                           <Text style='font-size: 18px;'>¥</Text>30 <Text style='font-size: 12px;color: #b3b3b3;text-decoration: line-through'>¥40</Text>
                         </View>
+                      </View>
+                      <View className='right-side'>
+                        <AtTag
+                          size='small'
+                          type='primary'
+                          circle
+                          active
+                        >进行中</AtTag>
                       </View>
                     </View>
                   </View>
@@ -110,23 +94,29 @@ class Index extends Component {
             </AtSwipeAction>
           </AtTabsPane>
           <AtTabsPane current={this.state.current} index={1} className='tab-content'>
-            {
-              this.state.loves.map((item, index) => {
-                return (
-                  <Item
-                    index={index}
-                    key={index}
-                    item={item}
-                    onHandleOpen={() => { }}
-                    onHandleLike={() => { }}
-                    onHandleComment={() => { }}
-                  />
-                )
-              })
-            }
+            <AtSwipeAction autoClose onClick={this.handleRemove} options={options}>
+              <View className='content team'>
+                <View className='left-side'>
+                  <View>
+                    全国数学建模大赛
+                    </View>
+                  <View>
+                    队伍：0 个
+                    </View>
+                </View>
+                <View className='right-side'>
+                  <AtTag
+                    size='small'
+                    type='primary'
+                    circle
+                    active
+                  >进行中</AtTag>
+                </View>
+              </View>
+            </AtSwipeAction>
           </AtTabsPane>
         </AtTabs>
-      </View>
+      </View >
     )
   }
 }

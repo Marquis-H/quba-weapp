@@ -1,0 +1,39 @@
+.container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+  padding: 30px;
+  box-sizing: border-box;
+ .bd {
+      width: 100%;
+      height: auto;
+      box-shadow: 0 30px 45px -20px rgba(0, 0, 0, 0.2);
+      border-radius: 20px;
+     .page-title {
+          width: 100%;
+          height: 130px;
+          line-height: 130px;
+          text-align: center;
+          background-image: repeating-linear-gradient(rgb(97, 144, 232), rgb(77, 124, 212));
+          border-radius: 15px 15px 0 0;
+          font-weight: bold;
+          font-size: 40px;
+          color: #fff;
+          &.banner{
+              height: 200px; 
+          }
+          .pkg-img{
+              border-radius: 15px 15px 0 0;
+              width: 100%;
+              height: 100%;
+          }
+      }
+      .page-content {
+          width: 100%;
+          height: auto;
+          border-radius: 15px;
+          background-color: #fff;
+          padding: 30px;
+          box-sizing: border-box;
+      }
+ }
+}

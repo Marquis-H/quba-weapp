@@ -7,6 +7,7 @@ interface Item {
     props: {
         onHandleOpen: Function,
         onHandleLike: Function,
+        onHandleComment: Function,
         item: object,
         index: number
     }
@@ -17,7 +18,7 @@ class Item extends Component {
         isLike: false
     }
 
-    onHandleStar = (index) => {
+    onHandleGuess = (index) => {
         this.props.onHandleOpen(index)
     }
 
@@ -28,6 +29,10 @@ class Item extends Component {
         })
     }
 
+    onHandleComment = (index) => {
+        this.props.onHandleComment(index)
+    }
+
     render() {
         const { item, index } = this.props
         const { isLike } = this.state
@@ -35,7 +40,7 @@ class Item extends Component {
         const taGenderShow = item['taGender'] == 'M' ? "li female" : (item['taGender'] == 'F' ? "li female" : "li");
 
         return (
-            <View>
+            <View className='container'>
                 <View className='post'>
                     <View className='post-title'>
                         <View className='ul'>
@@ -62,14 +67,14 @@ class Item extends Component {
                                 <AtIcon value={isLike ? "heart-2" : "heart"} size='20' color='#ffb400'></AtIcon>
                                 <Text>{item['like']}</Text>
                             </View>
-                            <View className='at-col' onClick={this.onHandleStar.bind(this, index)}>
+                            <View className='at-col' onClick={this.onHandleGuess.bind(this, index)}>
                                 <AtIcon value='star' size='20' color='#ffb400'></AtIcon>
                                 <Text className='star'>{item['guessRight']}/{item['guess']}</Text>
                             </View>
-                            <View className='at-col'>
+                            <View className='at-col' onClick={this.onHandleComment.bind(this, index)}>
                                 <View className='block'>
-                                    <AtIcon value='share' size='20' color='#ffb400'></AtIcon>
-                                    <Text className='share'>分享</Text>
+                                    <AtIcon value='message' size='20' color='#ffb400'></AtIcon>
+                                    <Text className='share'>{item['comments']}</Text>
                                 </View>
                             </View>
                         </View>

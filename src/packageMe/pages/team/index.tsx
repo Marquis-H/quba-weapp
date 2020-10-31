@@ -1,6 +1,8 @@
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View } from '@tarojs/components'
+import { AtCard, AtTag, AtDivider, AtIcon } from "taro-ui"
+import * as images from '../../../../static/images/index';
 
 import './index.scss'
 
@@ -48,7 +50,32 @@ class Index extends Component {
   render() {
     return (
       <View className='container'>
-        我参加的队伍
+        <AtCard
+          note='加入时间：2020-10-10'
+          extra='0 人'
+          title='全国数学建模大赛'
+          thumb={images.leaderIcon}
+        >
+          <View className='content'>
+            <View className='left-side'>
+              <View>队员1：xxx，计算机学院-软件工程</View>
+              <View>联系方式：手机137xxxxxxxx</View>
+              <AtDivider>
+                <AtIcon value='check-circle'></AtIcon>
+              </AtDivider>
+              <View>队员2：xxx，计算机学院-软件工程</View>
+              <View>联系方式：手机137xxxxxxxx</View>
+            </View>
+            <View className='right-side'>
+              <AtTag
+                size='small'
+                type='primary'
+                circle
+                active
+              >进行中</AtTag>
+            </View>
+          </View>
+        </AtCard>
       </View>
     )
   }

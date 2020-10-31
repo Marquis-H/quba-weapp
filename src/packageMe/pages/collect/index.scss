@@ -1,0 +1,58 @@
+.collect {
+  flex-direction: column;
+  width: 100%;
+
+  .tab-content{
+    padding: 20px;
+  }
+
+  .img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .at-col--auto {
+    margin-bottom: -5px;
+  }
+
+  .info{
+    margin:16px 20px 0;
+    font-size: 26px;
+    line-height: 42px;
+  }
+
+  .content{
+    display: flex;
+    justify-content: space-between;
+    max-height: 123px;
+  }
+
+  .idle{
+    border: 1px solid #eee;
+  }
+
+  .team{
+    padding: 10px;
+    border: 1px solid #eee;
+  }
+
+  .left-side {
+    display: inline-block;
+  }
+  
+  .right-side {
+    display: inline-block;
+    padding-right: 20px;
+    padding-top: 16px;
+    .select-btn {
+       margin-top: 50px;
+       border-radius: 50%;
+       width: 75px;
+       height: 75px;
+       border: 2px solid #606060;
+    }
+    .selected {
+        background-color: #6190E8 ;
+    }
+  }
+}

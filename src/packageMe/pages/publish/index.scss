@@ -1,35 +1,143 @@
 .container {
   flex-direction: column;
   width: 100%;
+
+  .tab-content{
+    padding: 20px;
+  }
+
+  .img {
+    width: 160px;
+    height: 160px;
+    border-radius: 10px;
+  }
+
+  .content{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .left-side {
+    display: inline-block;
+  }
+  
+  .right-side {
+    display: inline-block;
+    padding-right: 20px;
+    .select-btn {
+       margin-top: 50px;
+       border-radius: 50%;
+       width: 75px;
+       height: 75px;
+       border: 2px solid #606060;
+    }
+    .selected {
+        background-color: #6190E8 ;
+    }
+  }
 }
 
-.search {
-  height: 88px;
-  width: 100%;
-  padding: 0 30px;
-  background: #fff;
-  display: flex;
-  align-items: center;
+
+.post-title{
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 0px;
+}
+.post-title .ul{
+  list-style-type:none;
+  margin:0;
+  padding:0;
+  font-size: 32px;
+  text-align: left;
+}
+.post-title .ul .li{
+  display: inline;
+  margin-right: 10px;
+}
+.post-title .ul .male{
+  color: #03a9f4
+}
+.post-title .ul .female{
+  color: #ff3333;
+}
+.post-body .post-body-content{
+  word-wrap: break-word;
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 0px;
+  font-size: 28px;
+  color: #333;
+  text-align: left;
+  display: block;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+.post-body-time{
+  text-align: right;
+  text-indent: 0em;
+  padding: 0px;
+  color: #b3b3b3;
+  padding-right: 20px;
+  font-size: 22px;
+  display: block;
+  margin-block-start: 0.5em;
+  margin-block-end: 0.5em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }
 
-.search .icon {
-  line-height: 59px;
+.at-col{
+  padding: 10px;
+  text-align: center;
+  font-size: 32px;
+  .at-icon{
+      margin-right: 5px;
+  }
+  .at-icon-star{
+      margin-top: -5px;
+  }
+  .at-icon-share{
+      margin-top: -3px;
+  }
+  .at-icon-heart-2{
+    margin-top: -2px;
+  }
+  .at-icon-heart{
+    margin-top: -2px;
+  }
 }
 
-.search .input {
-  width: 690px;
-  height: 56px;
-  background: #ededed;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.publish{
+  .at-row{
+    border-top: 0
+  }
+  .at-col {
+    text-align: left;
+    font-size: 28px;
+    color: #333;
+    max-height: 180px;
+  }
+  .title{
+    font-size: 30px;
+    font-weight: bold;
+  }
+  .desp{
+    font-size: 24px;
+  }
 
-.search .txt {
-  height: 42px;
-  line-height: 42px;
-  color: #666;
-  padding-left: 10px;
-  font-size: 30px;
+  .post{
+    background: #fff;
+    padding-top: 0;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    box-shadow: 2px 4px 6px #eee;
+  }
+
+  .at-swipe-action__option {
+    margin-bottom: 20px;
+  }
 }
