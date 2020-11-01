@@ -103,7 +103,7 @@ class Index extends Component {
             <Text className='txt'>商品搜索, 共238件闲置商品</Text>
           </Navigator>
         </View>
-        <AtTabs current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
+        <AtTabs scroll current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
           {
             tabList.map((_, i) => {
               return (
