@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import { HTTP_STATUS } from '../const/status'
 import { BaseUrl } from './config'
 import error from '../utils/error'
-import { getToken, setBind, setToken } from '../utils/storageSync'
+import { getToken, setToken } from '../utils/storageSync'
 import login from '../utils/login'
 
 function request(params, method = 'GET') {
