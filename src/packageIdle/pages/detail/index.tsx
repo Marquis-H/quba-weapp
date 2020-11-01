@@ -1,6 +1,10 @@
+import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
-import { View } from '@tarojs/components'
+import { View, Swiper, SwiperItem, Image, ScrollView, Text } from '@tarojs/components'
+import { AtButton, AtTag, AtRate, AtMessage } from 'taro-ui'
+import idleApi from '../../../api/idle'
+import { Domain } from '../../../services/config'
 
 import './index.scss'
 
@@ -34,21 +38,124 @@ interface Index {
 
 @connect(() => ({}), () => ({}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    detail: null as any
   }
 
-  componentWillUnmount() { }
+  componentDidMount() {
+    var params = (getCurrentInstance() as any).router.params
+    idleApi.getIdleDetail({ id: params.id }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          detail: res.data
+        })
 
-  componentDidShow() { }
+        Taro.setNavigationBarTitle({
+          title: res.data.title
+        })
+      }
+    })
+  }
 
-  componentDidHide() { }
+  addTrade = () => {
+    const { id } = this.state.detail // application id
+    idleApi.addTrade({ id: id }).then(res => {
+      if (res.code == 0) {
+        Taro.redirectTo({
+          url: "/packageIdle/pages/trade/index?id=" + res.data.id
+        })
+      } else {
+        Taro.atMessage({
+          'message': res.message,
+          'type': 'error'
+        })
+      }
+    })
+  }
 
   render() {
+    const { detail } = this.state
+    const scrollTop = 0
+    const Threshold = 20
     return (
       <View className='container'>
-        闲置详情
+        {
+          detail &&
+          <ScrollView
+            className='scroll-view'
+            scrollY
+            scrollWithAnimation
+            scrollTop={scrollTop}
+            lowerThreshold={Threshold}
+            upperThreshold={Threshold}
+          >
+            <Swiper className='main-slider' indicatorDots autoplay interval={3000} duration={100}>
+              {
+                detail.photos.map(item => {
+                  return <SwiperItem key={item['title']}>
+                    <View className='banner-item'>
+                      <Image
+                        mode='aspectFill'
+                        className='img'
+                        src={Domain + item['file']}
+                      />
+                    </View>
+                  </SwiperItem>
+                })
+              }
+            </Swiper>
+            <View className='content'>
+              <View className='title'>
+                {detail['title']}
+              </View>
+              <View className='status'>
+                <View className='at-row'>
+                  <View className='at-col at-col-1 at-col--auto'>
+                    <AtTag size='small' type='primary' circle active>正在出售</AtTag>
+                  </View>
+                  <View className='at-col'>
+                    <View style='color: #f7454e;text-align:right'>
+                      <Text style='font-size: 18px;'>¥</Text>{detail.currentCost} <Text style='font-size: 12px;color: #b3b3b3;text-decoration: line-through'>¥{detail.originalCost}</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View className='desc'>
+                {detail.description}
+              </View>
+              <View className='number'>
+                <View className='at-row'>
+                  <View className='at-col at-col-8' style='display: flex;'>
+                    <Text>新旧程度：</Text><AtRate
+                      className='oldDeep'
+                      value={detail.oldDeep}
+                    />
+                  </View>
+                  <View className='at-col at-col-4'>
+                    数量：x{detail.number}
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View className='remark-link'>
+              <View className='remark'>
+                备注：{detail.remark ? detail.remark : '-'}
+              </View>
+              <View className='link'>
+                商品原始购买链接：{detail.originalUrl ? detail.originalUrl : '-'}
+              </View>
+            </View>
+          </ScrollView>
+        }
+        {
+          detail &&
+          <View className='trade'>
+            <AtButton type='primary' disabled={detail.status == 'Online' ? false : true} onClick={this.addTrade}>
+              {detail.status == 'Online' ? "发起交易" : (detail.status == 'Doing' ? "交易中" : "下架")}
+            </AtButton>
+          </View>
+        }
+        <AtMessage />
       </View>
     )
   }

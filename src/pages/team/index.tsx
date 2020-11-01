@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, Navigator } from '@tarojs/components'
@@ -42,7 +43,11 @@ class Index extends Component {
 
   componentWillUnmount() { }
 
-  componentDidShow() { }
+  componentDidShow() {
+    Taro.showLoading({
+      title: '暂未开放',
+    })
+  }
 
   componentDidHide() { }
 

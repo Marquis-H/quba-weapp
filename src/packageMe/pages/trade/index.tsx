@@ -1,7 +1,9 @@
+import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View } from '@tarojs/components'
 import { AtTabs, AtTabsPane, AtList, AtListItem } from "taro-ui"
+import userApi from '../../../api/user'
 
 import './index.scss'
 
@@ -36,7 +38,30 @@ interface Index {
 @connect(() => ({}), () => ({}))
 class Index extends Component {
   state = {
-    current: 0
+    current: 0,
+    sales: [] as any,
+    buys: [] as any,
+    salesLoading: false,
+    buysLoading: false
+  }
+
+  componentDidShow() {
+    userApi.getTradeList({ slug: 'sale' }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          sales: res.data,
+          salesLoading: true
+        })
+      }
+    })
+    userApi.getTradeList({ slug: 'buy' }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          buys: res.data,
+          buysLoading: true
+        })
+      }
+    })
   }
 
   handleClick(value) {
@@ -45,24 +70,45 @@ class Index extends Component {
     })
   }
 
+  toTrade(id, slug) {
+    Taro.navigateTo({
+      url: "/packageIdle/pages/trade/index?id=" + id + "&slug=" + slug
+    })
+  }
+
   render() {
     const tabList = [{ title: '我的购买' }, { title: '我的出售' }]
-
+    const { sales, buys, salesLoading, buysLoading } = this.state
     return (
       <View className='container'>
         <AtTabs current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
           <AtTabsPane current={this.state.current} index={0} className='tab-content'>
-            <AtList>
-              <AtListItem title='笔记本电脑' className='doing' extraText='进行中' arrow='right' />
-              <AtListItem title='闹钟' className='cancel' extraText='取消' arrow='right' />
-              <AtListItem title='闹钟' className='done' extraText='交易完成' arrow='right' />
-            </AtList>
+            {
+              buys.length > 0 && <AtList>
+                {
+                  buys.map((item, index) => {
+                    return (
+                      <AtListItem onClick={this.toTrade.bind(this, item.id, 'buy')} key={index} title={item.application.title} className={item.status} extraText={item.statusTitle} arrow='right' />
+                    )
+                  })
+                }
+              </AtList>
+            }
+            {buysLoading && sales.length == 0 && <View style='text-align:center'>无记录</View>}
           </AtTabsPane>
           <AtTabsPane current={this.state.current} index={1} className='tab-content'>
-            <AtList>
-              <AtListItem title='笔记本电脑' className='doing' extraText='进行中' arrow='right' />
-              <AtListItem title='闹钟' className='cancel' extraText='取消' arrow='right' />
-            </AtList>
+            {
+              sales.length > 0 && <AtList>
+                {
+                  sales.map((item, index) => {
+                    return (
+                      <AtListItem onClick={this.toTrade.bind(this, item.id, 'sale')} key={index} title={item.application.title} className={item.status} extraText={item.statusTitle} arrow='right' />
+                    )
+                  })
+                }
+              </AtList>
+            }
+            {salesLoading && sales.length == 0 && <View style='text-align:center'>无记录</View>}
           </AtTabsPane>
         </AtTabs>
       </View>

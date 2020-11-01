@@ -40,6 +40,7 @@ export default {
       pages: [
         'pages/application/index', // 发布商品
         'pages/detail/index', // 闲置详情
+        'pages/trade/index' // 交易
       ]
     },
     {

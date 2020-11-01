@@ -1,7 +1,10 @@
+import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, Navigator } from '@tarojs/components'
-import { AtIcon } from 'taro-ui';
+import { AtIcon, AtTabs, AtTabsPane, AtFab } from 'taro-ui';
+import Item from './components/item'
+import idleApi from '../../api/idle'
 
 import './index.scss'
 
@@ -35,18 +38,63 @@ interface Index {
 
 @connect(() => ({}), () => ({}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    current: 0,
+    tabList: [{ id: 0, title: '全部' }],
+    list: [],
+    loading: false
   }
 
-  componentWillUnmount() { }
+  componentDidShow() {
+    this.setState({
+      tabList: [{ id: 0, title: '全部' }]
+    })
+    idleApi.getIdleCategory().then(res => {
+      if (res.code == 0) {
+        this.setState({
+          tabList: this.state.tabList.concat(res.data)
+        })
+      }
+    })
+    this.handleGetIdleList(0)
+  }
 
-  componentDidShow() { }
+  handleGetIdleList(cId) {
+    this.setState({
+      loading: false
+    })
+    idleApi.getIdleList({ cId: cId }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          list: res.data,
+          loading: true
+        })
+      }
+    })
+  }
 
-  componentDidHide() { }
+  handleClick(value) {
+    this.handleGetIdleList(this.state.tabList[value]['id'])
+    this.setState({
+      current: value
+    })
+  }
 
-  render() {
+  onAdd() {
+    Taro.navigateTo({
+      url: "/packageIdle/pages/application/index"
+    })
+  }
+
+  toDetail(id) {
+    Taro.navigateTo({
+      url: "/packageIdle/pages/detail/index?id=" + id
+    })
+  }
+
+  render = () => {
+    const { tabList, list, loading } = this.state
+
     return (
       <View className='container'>
         <View className='search'>
@@ -54,6 +102,31 @@ class Index extends Component {
             <AtIcon className='icon' size='18' color='#666' value='search' />
             <Text className='txt'>商品搜索, 共238件闲置商品</Text>
           </Navigator>
+        </View>
+        <AtTabs current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
+          {
+            tabList.map((_, i) => {
+              return (
+                <AtTabsPane key={i} current={this.state.current} index={i} className='tab-content'>
+                  {
+                    list.map((item, index) => {
+                      return (
+                        <View key={index} onClick={this.toDetail.bind(this, item['id'])}>
+                          <Item item={item} />
+                        </View>
+                      )
+                    })
+                  }
+                  {loading && list.length == 0 && <View style='text-align: center'>无记录</View>}
+                </AtTabsPane>
+              )
+            })
+          }
+        </AtTabs>
+        <View className='add'>
+          <AtFab onClick={this.onAdd.bind(this)}>
+            <Text className='at-fab__icon at-icon at-icon-add'></Text>
+          </AtFab>
         </View>
       </View>
     )

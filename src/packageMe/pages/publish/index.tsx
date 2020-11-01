@@ -1,9 +1,12 @@
+import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Image, Text } from '@tarojs/components'
-import { AtTabs, AtTabsPane, AtTag, AtSwipeAction } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtTag, AtSwipeAction, AtMessage } from 'taro-ui'
 import Item from "../../../packageLove/pages/list/components/item";
-import loveApi from '../../../api/love'
+import userApi from '../../../api/user'
+import idleApi from '../../../api/idle'
+import { Domain } from '../../../services/config'
 
 import './index.scss'
 
@@ -44,15 +47,29 @@ class Index extends Component {
   state = {
     current: 0,
     loves: [],
-    lovesLoading: false
+    idleApplications: [],
+    lovesLoading: false,
+    idleApplicaitonLoading: false
   }
 
   componentWillMount() {
-    loveApi.getLoveList({ id: this.props.user['profile']['pid'] }).then(res => {
+    userApi.getLovePublishList().then(res => {
       if (res.code == 0) {
         this.setState({
           loves: res.data,
           lovesLoading: true
+        })
+      }
+    })
+    this.handleGetIdlePublishList()
+  }
+
+  handleGetIdlePublishList() {
+    userApi.getIdlePublishList().then(res => {
+      if (res.code == 0) {
+        this.setState({
+          idleApplications: res.data,
+          idleApplicaitonLoading: true
         })
       }
     })
@@ -64,54 +81,110 @@ class Index extends Component {
     })
   }
 
+  toDetail(id) {
+    Taro.navigateTo({
+      url: "/packageIdle/pages/detail/index?id=" + id
+    })
+  }
+
+  handleSwipeAction(id, status) {
+    switch (status) {
+      case 'Online':
+        status = "Offline";
+        break
+      case 'Offline':
+        status = "Online";
+        break
+      case 'Doing':
+        Taro.atMessage({
+          'message': '交易进行中，请等待买家确认交易完成',
+          'type': 'warning',
+        })
+        return;
+    }
+
+    idleApi.changeIdleApplication({ id: id, status: status }).then(res => {
+      if (res.code == 0) {
+        this.handleGetIdlePublishList()
+      }
+    })
+  }
+
   render() {
     const tabList = [{ title: '二手闲置' }, { title: '表白墙' }]
-    const options = [
+    const { lovesLoading, idleApplicaitonLoading } = this.state
+    const onlineOptions = [
       {
-        text: '删除',
+        text: '下架',
         style: {
           backgroundColor: '#FF4949'
         }
       }
     ]
-    const { lovesLoading } = this.state
-
+    const offlineOptions = [
+      {
+        text: '上架',
+        style: {
+          backgroundColor: '#6190E8'
+        }
+      }
+    ]
+    const doingOptions = [
+      {
+        text: '进行中',
+        style: {
+          backgroundColor: '#ffb400'
+        }
+      }
+    ]
     return (
       <View className='container publish'>
         <AtTabs swipeable={false} current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>
           <AtTabsPane current={this.state.current} index={0} className='tab-content'>
-            <AtSwipeAction options={options}>
-              <View className='post'>
-                <View className='post-body'>
-                  <View className='content'>
-                    <View className='at-row'>
-                      <View className='at-col at-col-1 at-col--auto'>
-                        <Image mode='aspectFill' className='img' src='http://yanxuan.nosdn.127.net/65091eebc48899298171c2eb6696fe27.jpg' />
-                      </View>
-                      <View className='at-col info'>
-                        <View className='title'>
-                          出售笔记本电脑
+            {
+              this.state.idleApplications.map((item, index) => {
+                return (
+                  <AtSwipeAction
+                    key={index}
+                    onClick={this.handleSwipeAction.bind(this, item['id'], item['status'])}
+                    options={item['status'] == 'Online' ? onlineOptions : (item['status'] == 'Offline' ? offlineOptions : doingOptions)}
+                  >
+                    <View className='post' onClick={this.toDetail.bind(this, item['id'])}>
+                      <View className='post-body'>
+                        <View className='content'>
+                          <View className='at-row'>
+                            <View className='at-col at-col-1 at-col--auto'>
+                              <Image mode='aspectFill' className='img' src={Domain + item['famousPhoto']} />
                             </View>
-                        <View className='desp'>
-                          有意购买者：xxxx
-                      </View>
-                        <View>
-                          <AtTag
-                            size='small'
-                            type='primary'
-                            circle
-                            active
-                          >进行中</AtTag>
-                        </View>
-                        <View style='color: #f7454e'>
-                          <Text style='font-size: 18px;'>¥</Text>30 <Text style='font-size: 12px;color: #b3b3b3;text-decoration: line-through'>¥40</Text>
+                            <View className='at-col info'>
+                              <View className='title'>
+                                {item['title']}
+                              </View>
+                              <View className='desp'>
+                                {item['description']}
+                              </View>
+                              <View>
+                                <AtTag
+                                  size='small'
+                                  type='primary'
+                                  circle
+                                  active
+                                >{item['statusTitle']}</AtTag>
+                              </View>
+                              <View style='color: #f7454e'>
+                                <Text style='font-size: 18px;'>¥</Text>{item['currentCost']} <Text style='font-size: 12px;color: #b3b3b3;text-decoration: line-through'>¥{item['originalCost']}</Text>
+                                <Text style='color: #b3b3b3;margin-right:10px;float:right'>x{item['number']}</Text>
+                              </View>
+                            </View>
+                          </View>
                         </View>
                       </View>
                     </View>
-                  </View>
-                </View>
-              </View>
-            </AtSwipeAction>
+                  </AtSwipeAction>
+                )
+              })
+            }
+            {idleApplicaitonLoading && this.state.idleApplications.length == 0 && <View style='text-align:center'>无记录</View>}
           </AtTabsPane>
           <AtTabsPane current={this.state.current} index={1} className='tab-content'>
             {
@@ -131,6 +204,7 @@ class Index extends Component {
             {lovesLoading && this.state.loves.length == 0 && <View style='text-align:center'>无记录</View>}
           </AtTabsPane>
         </AtTabs>
+        <AtMessage />
       </View>
     )
   }

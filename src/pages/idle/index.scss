@@ -1,6 +1,17 @@
 .container {
   flex-direction: column;
   width: 100%;
+
+  .tab-content{
+    padding: 20px;
+  }
+
+  .add{
+    position: fixed;
+      right: .68267rem;
+      bottom: .68267rem;
+      z-index: 1100;
+  }
 }
 
 .search {

@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Image, Text } from '@tarojs/components'
@@ -37,6 +38,12 @@ interface Index {
 class Index extends Component {
   state = {
     current: 0
+  }
+
+  componentDidShow() {
+    Taro.showLoading({
+      title: '暂未开放',
+    })
   }
 
   handleClick(value) {

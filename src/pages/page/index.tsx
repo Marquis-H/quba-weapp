@@ -40,9 +40,7 @@ class Index extends Component {
   }
 
   componentWillMount() {
-    console.log(getCurrentInstance())
     var params = (getCurrentInstance() as any).router.params
-    console.log(params.title)
     Taro.setNavigationBarTitle({
       title: params.title
     })

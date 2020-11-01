@@ -1,0 +1,23 @@
+.container {
+  flex-direction: column;
+  width: 100%;
+  padding: 20px 0;
+
+  .at-button {
+    margin: 20px;
+  }
+
+  .action{
+    padding-top: 10px;
+  }
+
+  .at-list__item-extra {
+    max-width: 100vw;
+  }
+
+  .trade{
+    .at-modal__content {
+      min-height: auto;
+    }
+  }
+}
