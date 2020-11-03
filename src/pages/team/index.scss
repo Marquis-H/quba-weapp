@@ -1,6 +1,10 @@
 .container {
   flex-direction: column;
   width: 100%;
+
+  .item-content{
+    padding: 20px;
+  }
 }
 
 .search {

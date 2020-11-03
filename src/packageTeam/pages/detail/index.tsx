@@ -1,6 +1,10 @@
+import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
-import { View } from '@tarojs/components'
+import { View, ScrollView, Text } from '@tarojs/components'
+import { AtButton, AtMessage, AtList, AtListItem, AtModal } from 'taro-ui'
+import teamApi from '../../../api/team'
+import * as images from '../../../../static/images'
 
 import './index.scss'
 
@@ -34,21 +38,128 @@ interface Index {
 
 @connect(() => ({}), () => ({}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    detail: null as any,
+    application: null as any,
+    show: false
   }
 
-  componentWillUnmount() { }
+  componentDidShow() {
+    var params = (getCurrentInstance() as any).router.params
+    Taro.setNavigationBarTitle({
+      title: params.title
+    })
+    teamApi.teamDetail({ id: params.id }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          detail: res.data
+        })
+      }
+    })
+  }
 
-  componentDidShow() { }
+  addTeam = (id) => {
+    Taro.navigateTo({
+      url: "/packageTeam/pages/join/index?id=" + id
+    })
+  }
 
-  componentDidHide() { }
+  onShow = (item) => {
+    this.setState({
+      show: true,
+      application: item
+    })
+  }
+
+  handleConfirm = () => {
+    this.setState({
+      show: false,
+      application: null
+    })
+  }
 
   render() {
+    const { detail, show, application } = this.state
+    const scrollTop = 0
+    const Threshold = 20
+
     return (
       <View className='container'>
-        赛事详情页（包括申请的队伍列表）
+        {
+          detail &&
+          <ScrollView
+            className='scroll-view'
+            scrollY
+            scrollWithAnimation
+            scrollTop={scrollTop}
+            lowerThreshold={Threshold}
+            upperThreshold={Threshold}
+          >
+            <View className='content'>
+              <View className='title'>
+                {detail.matchInfo.title}
+              </View>
+              <View className='desc'>
+                现状：{detail.currentStatus}
+              </View>
+              <View className='desc'>
+                技能要求：{detail.skill}
+              </View>
+              <View className='desc'>
+                经验要求：{detail.experience}
+              </View>
+              <View className='number'>
+                <Text>人数限制：{detail.people}</Text>
+                <Text style='color: #b3b3b3;margin-right:10px;float:right'>加入队伍截止时间：{detail.joinEndAt}</Text>
+              </View>
+            </View>
+            <AtList className='team-list'>
+              <AtListItem
+                note={'联系方式：' + detail.profile.mobile}
+                title={detail.profile.name}
+                extraText='发起人'
+                thumb={images.leaderIcon}
+              />
+              {
+                detail.children.map((item, index) => {
+                  return (
+                    <AtListItem
+                      iconInfo={{ size: 30, color: '#6190E8', value: 'user', }}
+                      onClick={this.onShow.bind(this, item)}
+                      key={index}
+                      note={'联系方式：' + item.contact}
+                      title={item.profile.name}
+                      extraText='点击查看'
+                    />
+                  )
+                })
+              }
+            </AtList>
+          </ScrollView>
+        }
+        {
+          detail &&
+          <View className='trade'>
+            <AtButton type='primary' onClick={this.addTeam.bind(this, detail.id)}>
+              加入队伍
+            </AtButton>
+          </View>
+        }
+        <AtMessage />
+        {
+          application && <AtModal
+            isOpened={show}
+            title={application.profile.name + '的信息'}
+            confirmText='确认'
+            onClose={this.handleConfirm}
+            onConfirm={this.handleConfirm}
+            content={`学院：${application.profile.collegeItem.title}\n\r
+            专业：${application.profile.professionalItem.title}\n\r
+            拥有技能：${application.skills}\n\r
+            比赛经验：${application.matchExperience}\n\r
+            联系方式：${application.contact}`}
+          />
+        }
       </View>
     )
   }

@@ -47,7 +47,8 @@ class Index extends Component {
 
   componentDidShow() {
     this.setState({
-      tabList: [{ id: 0, title: '全部' }]
+      tabList: [{ id: 0, title: '全部' }],
+      current: 0
     })
     idleApi.getIdleCategory().then(res => {
       if (res.code == 0) {

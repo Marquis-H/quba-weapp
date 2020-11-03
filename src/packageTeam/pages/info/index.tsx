@@ -1,6 +1,11 @@
+import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
-import { View } from '@tarojs/components'
+import { View, ScrollView, Text } from '@tarojs/components'
+import { AtTag, AtButton, AtMessage, AtList, AtListItem } from 'taro-ui'
+import matchApi from '../../../api/match'
+import teamApi from '../../../api/team'
+import { Domain } from '../../../services/config'
 
 import './index.scss'
 
@@ -34,21 +39,144 @@ interface Index {
 
 @connect(() => ({}), () => ({}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    onlineOrOffline: ["线下比赛", "线上比赛"],
+    types: ["国家级", "省级", "市级", "校级", "院级"],
+    detail: null as any,
+    teamList: [] as any
   }
 
-  componentWillUnmount() { }
+  componentDidShow() {
+    var params = (getCurrentInstance() as any).router.params
+    matchApi.matchDetail({ id: params.id }).then((res) => {
+      if (res.code == 0) {
+        this.setState({
+          detail: res.data
+        })
 
-  componentDidShow() { }
+        Taro.setNavigationBarTitle({
+          title: res.data.title
+        })
+      }
+    })
+    teamApi.getTeamList({ id: params.id }).then((res) => {
+      if (res.code == 0) {
+        this.setState({
+          teamList: res.data
+        })
+      }
+    })
+  }
 
-  componentDidHide() { }
+  addTeam = () => {
+    const { id } = this.state.detail // application id
+    Taro.navigateTo({
+      url: "/packageTeam/pages/application/index?id=" + id
+    })
+  }
+
+  copyText = (text) => {
+    Taro.setClipboardData({
+      data: text,
+      success: function () {
+        Taro.getClipboardData({
+          success: function () {
+            Taro.atMessage({
+              'message': '复制成功，请到浏览器粘贴打开',
+              'type': 'error'
+            })
+          }
+        })
+      }
+    })
+  }
+
+  applicationDetail(id, title) {
+    Taro.navigateTo({
+      url: "/packageTeam/pages/detail/index?id=" + id + "&title=" + title
+    })
+  }
 
   render() {
+    const { onlineOrOffline, types, detail, teamList } = this.state
+    const scrollTop = 0
+    const Threshold = 20
     return (
       <View className='container'>
-        队伍详情页
+        {
+          detail &&
+          <ScrollView
+            className='scroll-view'
+            scrollY
+            scrollWithAnimation
+            scrollTop={scrollTop}
+            lowerThreshold={Threshold}
+            upperThreshold={Threshold}
+          >
+            <View className='content'>
+              <View className='title'>
+                {detail['title']}
+              </View>
+              <View className='status'>
+                {
+                  detail.matchCategory &&
+                  <View>
+                    <AtTag size='small' type='primary' circle active>{onlineOrOffline[detail.tabs[0]]}</AtTag>
+                    <AtTag size='small' type='primary' circle active customStyle='margin-left:2px'>{types[detail.matchCategory.type]}</AtTag>
+                    <AtTag size='small' type='primary' circle active customStyle='margin-left:2px'>{detail.matchCategory.title}</AtTag>
+                  </View>
+                }
+              </View>
+              <View className='desc'>
+                {detail.qualificationLimit}
+              </View>
+              <View className='number'>
+                <Text>人数限制：{detail.peopleLimit}</Text>
+                <Text style='color: #b3b3b3;margin-right:10px;float:right'>结束时间：{detail.endAt}</Text>
+              </View>
+              <View className='urls'>
+                相关链接：{
+                  detail && detail.urls.split(',').map((url, index) => {
+                    return (
+                      <Text style='margin-right: 3px;color:#78A4F4' key={index} onClick={this.copyText.bind(this, url)}>链接{index + 1}</Text>
+                    )
+                  })
+                }
+              </View>
+              {
+                detail.files && <View className='file'>
+                  相关文件：<Text style='color:#78A4F4' onClick={this.copyText.bind(this, Domain + detail.files[0]['response']['data']['file'])}>文件</Text>
+                </View>
+              }
+            </View>
+            <AtList className='team-list'>
+              {
+                teamList.map((item, index) => {
+                  return (
+                    <AtListItem
+                      onClick={this.applicationDetail.bind(this, item.id, '队伍' + (index + 1))}
+                      key={index}
+                      arrow='right'
+                      note={'目前队内人数 ' + (item.childrens + 1)}
+                      title={'队伍' + (index + 1)}
+                      extraText='加入'
+                    />
+                  )
+                })
+              }
+              {teamList.length == 0 && <View style='text-align:center'>无队伍</View>}
+            </AtList>
+          </ScrollView>
+        }
+        {
+          detail &&
+          <View className='trade'>
+            <AtButton type='primary' onClick={this.addTeam}>
+              发起组队
+            </AtButton>
+          </View>
+        }
+        <AtMessage />
       </View>
     )
   }

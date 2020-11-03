@@ -1,6 +1,9 @@
+import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
-import { View } from '@tarojs/components'
+import { View, Picker } from '@tarojs/components'
+import { AtForm, AtInput, AtTextarea, AtList, AtListItem, AtMessage, AtButton } from 'taro-ui'
+import teamApi from '../../../api/team'
 
 import './index.scss'
 
@@ -34,21 +37,159 @@ interface Index {
 
 @connect(() => ({}), () => ({}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    currentStatus: "",
+    skill: "",
+    experience: "",
+    people: "",
+    joinEndAt: ""
   }
 
-  componentWillUnmount() { }
+  handleChange(type, value) {
+    switch (type) {
+      case "currentStatus":
+        this.setState({
+          currentStatus: value
+        })
+        break;
+      case "skill":
+        this.setState({
+          skill: value
+        })
+        break;
+      case "experience":
+        this.setState({
+          experience: value
+        })
+        break;
+      case "people":
+        this.setState({
+          people: value
+        })
+        break;
+    }
+  }
 
-  componentDidShow() { }
+  onDateChange = (e) => {
+    this.setState({
+      joinEndAt: e.detail.value
+    })
+  }
 
-  componentDidHide() { }
+  handleSubmit = () => {
+    var params = (getCurrentInstance() as any).router.params
+
+    const {
+      currentStatus,
+      skill,
+      experience,
+      people,
+      joinEndAt
+    } = this.state
+
+    var errorMessages = [] as any
+    if (currentStatus == '') {
+      errorMessages.push("项目现状")
+    }
+    if (skill == '') {
+      errorMessages.push("技能要求")
+    }
+    if (experience == '') {
+      errorMessages.push("经验要求")
+    }
+    if (people == '') {
+      errorMessages.push("人数")
+    }
+    if (joinEndAt == '') {
+      errorMessages.push("加入队伍截止时间")
+    }
+
+    if (errorMessages.length > 0) {
+      Taro.atMessage({
+        'message': '请检查' + errorMessages.join('，') + '是否填写',
+        'type': 'error'
+      })
+
+      return;
+    }
+
+    teamApi.create({
+      currentStatus,
+      skill,
+      experience,
+      people,
+      joinEndAt,
+      mid: params.id
+    }).then(res => {
+      if (res.code == 0) {
+        Taro.navigateBack()
+      } else {
+        Taro.atMessage({
+          'message': res.message,
+          'type': 'error'
+        })
+      }
+    })
+  }
 
   render() {
+    const {
+      currentStatus,
+      skill,
+      experience,
+      people,
+      joinEndAt
+    } = this.state
+
     return (
       <View className='container'>
-        发起组队申请
+        <AtForm>
+          <AtInput
+            required
+            name='currentStatus'
+            title='项目现状'
+            type='text'
+            placeholder='请输入项目现状'
+            value={currentStatus}
+            onChange={this.handleChange.bind(this, 'currentStatus')}
+          />
+          <View className='title'>技能要求</View>
+          <AtTextarea
+            className='skill'
+            value={skill}
+            onChange={this.handleChange.bind(this, 'skill')}
+            maxLength={200}
+            placeholder='请输入技能要求'
+          />
+          <View className='title'>经验要求</View>
+          <AtTextarea
+            className='experience'
+            value={experience}
+            onChange={this.handleChange.bind(this, 'experience')}
+            maxLength={200}
+            placeholder='请输入经验要求'
+          />
+          <AtInput
+            required
+            name='people'
+            title='人数'
+            type='number'
+            placeholder='请输入人数'
+            value={people}
+            onChange={this.handleChange.bind(this, 'people')}
+          />
+          <Picker value={joinEndAt} mode='date' onChange={this.onDateChange}>
+            <AtList className='category' hasBorder={false}>
+              <AtListItem
+                hasBorder={false}
+                title='加入队伍截止时间'
+                extraText={joinEndAt}
+              />
+            </AtList>
+          </Picker>
+        </AtForm>
+        <AtButton type='primary' className='submit' onClick={this.handleSubmit}>提交</AtButton>
+        <AtMessage />
       </View>
     )
   }

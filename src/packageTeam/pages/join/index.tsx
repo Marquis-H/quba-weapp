@@ -1,6 +1,9 @@
+import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View } from '@tarojs/components'
+import { AtTextarea, AtForm, AtButton, AtMessage } from 'taro-ui'
+import teamApi from '../../../api/team'
 
 import './index.scss'
 
@@ -34,21 +37,106 @@ interface Index {
 
 @connect(() => ({}), () => ({}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    skills: '',
+    matchExperience: '',
+    contact: ''
   }
 
-  componentWillUnmount() { }
+  handleChange(type, value) {
+    switch (type) {
+      case "skills":
+        this.setState({
+          skills: value
+        })
+        break;
+      case "matchExperience":
+        this.setState({
+          matchExperience: value
+        })
+        break;
+      case "contact":
+        this.setState({
+          contact: value
+        })
+        break;
+    }
+  }
 
-  componentDidShow() { }
+  handleSubmit = () => {
+    var params = (getCurrentInstance() as any).router.params
+    const { skills, matchExperience, contact } = this.state
+    var errorMessages = [] as any
+    if (skills == '') {
+      errorMessages.push("技能要求")
+    }
+    if (matchExperience == '') {
+      errorMessages.push("比赛经验")
+    }
+    if (contact == '') {
+      errorMessages.push("联系方式")
+    }
 
-  componentDidHide() { }
+    if (errorMessages.length > 0) {
+      Taro.atMessage({
+        'message': '请检查' + errorMessages.join('，') + '是否填写',
+        'type': 'error'
+      })
+
+      return;
+    }
+
+    console.log(params)
+    teamApi.addTeam({
+      skills,
+      matchExperience,
+      contact,
+      aid: params.id
+    }).then(res => {
+      if (res.code == 0) {
+        Taro.navigateBack()
+      } else {
+        Taro.atMessage({
+          'message': res.message,
+          'type': 'error'
+        })
+      }
+    })
+  }
 
   render() {
+    const { skills, matchExperience, contact } = this.state
     return (
       <View className='container'>
-        加入队伍申请
+        <AtForm>
+          <View className='title'>技能要求</View>
+          <AtTextarea
+            className='skill'
+            value={skills}
+            onChange={this.handleChange.bind(this, 'skills')}
+            maxLength={200}
+            placeholder='请输入技能要求'
+          />
+          <View className='title'>比赛经验</View>
+          <AtTextarea
+            className='matchExperience'
+            value={matchExperience}
+            onChange={this.handleChange.bind(this, 'matchExperience')}
+            maxLength={200}
+            placeholder='请输入比赛经验'
+          />
+          <View className='title'>联系方式</View>
+          <AtTextarea
+            className='contact'
+            value={contact}
+            onChange={this.handleChange.bind(this, 'contact')}
+            maxLength={200}
+            placeholder='请输入联系方式'
+          />
+          <View style='padding: 5px 0'></View>
+        </AtForm>
+        <AtButton type='primary' className='submit' onClick={this.handleSubmit}>提交</AtButton>
+        <AtMessage />
       </View>
     )
   }

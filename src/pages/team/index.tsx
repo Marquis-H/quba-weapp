@@ -3,6 +3,8 @@ import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, Navigator } from '@tarojs/components'
 import { AtIcon } from 'taro-ui';
+import matchApi from '../../api/match'
+import Item from './components/item'
 
 import './index.scss'
 
@@ -36,22 +38,29 @@ interface Index {
 
 @connect(() => ({}), () => ({}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    list: []
   }
 
-  componentWillUnmount() { }
-
   componentDidShow() {
-    Taro.showLoading({
-      title: '暂未开放',
+    matchApi.getMatchList().then(res => {
+      if (res.code == 0) {
+        this.setState({
+          list: res.data
+        })
+      }
     })
   }
 
-  componentDidHide() { }
+  toDetail(id) {
+    Taro.navigateTo({
+      url: "/packageTeam/pages/info/index?id=" + id
+    })
+  }
 
   render() {
+    const { list } = this.state
+
     return (
       <View className='container'>
         <View className='search'>
@@ -59,6 +68,17 @@ class Index extends Component {
             <AtIcon className='icon' size='18' color='#666' value='search' />
             <Text className='txt'>赛事搜索, 共20个参赛队伍</Text>
           </Navigator>
+        </View>
+        <View className='item-content'>
+          {
+            list.map((item, index) => {
+              return (
+                <View key={index} onClick={this.toDetail.bind(this, item['id'])}>
+                  <Item item={item} />
+                </View>
+              )
+            })
+          }
         </View>
       </View>
     )

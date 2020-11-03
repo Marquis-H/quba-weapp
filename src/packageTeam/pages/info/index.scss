@@ -1,35 +1,68 @@
 .container {
   flex-direction: column;
   width: 100%;
-}
 
-.search {
-  height: 88px;
-  width: 100%;
-  padding: 0 30px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-}
+  .main-slider{
+    background-color: #e5e5e5;
+    height: 480px;
+    .img{
+      width:100%;
+    }
+  }
 
-.search .icon {
-  line-height: 59px;
-}
+  .scroll-view{
+    height: 90vh;
+    .content{
+      background-color: #ffffff;
+      padding: 20px 30px;
+    }
 
-.search .input {
-  width: 690px;
-  height: 56px;
-  background: #ededed;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .title{
+      font-size: 38px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
 
-.search .txt {
-  height: 42px;
-  line-height: 42px;
-  color: #666;
-  padding-left: 10px;
-  font-size: 30px;
+    .desc{
+      font-size: 28px;
+      margin: 20px 10px;
+      color: #333;
+    }
+
+    .number{
+      .at-col{
+        font-size: 21px;
+      }
+    }
+
+    .team-list{
+      margin: 30px 0;
+    }
+
+    .urls{
+      margin-top: 20px;
+      font-size: 28px;
+      word-break: break-all;
+    }
+
+    .file{
+      margin-top: 10px;
+      font-size: 28px;
+      word-break: break-all;
+    }
+  }
+
+  .trade{
+    background-color: #ffffff;
+    padding: 20px;
+    height: calc(10vh - 40px);
+  }
+
+  .at-row{
+    border-top: none;
+  }
+
+  .at-col{
+    text-align: left;
+  }
 }

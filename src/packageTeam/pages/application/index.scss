@@ -1,35 +1,81 @@
 .container {
   flex-direction: column;
   width: 100%;
-}
 
-.search {
-  height: 88px;
-  width: 100%;
-  padding: 0 30px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-}
+  padding: 20px 0;
 
-.search .icon {
-  line-height: 59px;
-}
+  .category{
+    margin-top: 20px;
+  }
 
-.search .input {
-  width: 690px;
-  height: 56px;
-  background: #ededed;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .item-content__info-title::before {
+    display: inline-block;
+    margin-right: 8rpx;
+    color: #FF4949;
+    font-size: 28rpx;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: "*";
+  }
 
-.search .txt {
-  height: 42px;
-  line-height: 42px;
-  color: #666;
-  padding-left: 10px;
-  font-size: 30px;
+  .at-list__item::after {
+    left: 0;
+  }
+
+  .at-list__item {
+    margin-left: 32rpx;
+    padding-left: 0;
+  }
+
+  .title{
+    margin-right: 16rpx;
+    width: 172rpx;
+    font-size: 32rpx;
+    line-height: 1.5;
+    vertical-align: middle;
+    text-align: left;
+    padding: 20px 20px 10px 32px;
+  }
+  .title::before {
+    display: inline-block;
+    margin-right: 8rpx;
+    color: #FF4949;
+    font-size: 28rpx;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: "*";
+  }
+
+  .skill, .experience{
+    margin: 10px;
+    width: calc(100vw - 20px);
+  }
+  
+  .description{
+    margin: 10px;
+    border: none;
+  }
+
+  .photo-title{
+    padding: 10px;
+    color: #333;
+  }
+
+  .famous-add{
+    .at-image-picker__choose-btn {
+      display: inline;
+    }
+  }
+
+  .famous-remove{
+    .at-image-picker__choose-btn {
+      display: none;
+    }
+  }
+
+  .submit{
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
 }

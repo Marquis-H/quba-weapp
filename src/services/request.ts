@@ -17,9 +17,9 @@ function request(params, method = 'GET') {
         header['Api-Key'] = `${token}`
     }
     return new Promise<any>((resolve, reject) => {
-        Taro.showLoading({
-            title: '正在加載'
-        })
+        // Taro.showLoading({
+        //     title: '正在加載'
+        // })
         Taro.request({
             url: BaseUrl + url,
             data: data,
@@ -69,7 +69,7 @@ function request(params, method = 'GET') {
                 reject('error')
             },
             complete() {
-                Taro.hideLoading()
+                // Taro.hideLoading()
             }
         })
     })
