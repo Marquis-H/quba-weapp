@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { View } from '@tarojs/components'
 import { AtCard, AtTag, AtDivider, AtIcon } from "taro-ui"
 import * as images from '../../../../static/images/index';
+import userApi from '../../../api/user'
 
 import './index.scss'
 
@@ -37,50 +38,102 @@ interface Index {
 
 @connect(() => ({}), () => ({}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    list: [] as any
   }
 
-  componentWillUnmount() { }
-
   componentDidShow() {
-    Taro.showLoading({
-      title: '暂未开放',
+    userApi.getTeamList().then(res => {
+      if (res.code == 0) {
+        this.setState({
+          list: res.data
+        })
+      }
     })
   }
 
-  componentDidHide() { }
+  toTeam = (id) => {
+    Taro.navigateTo({
+      url: '/packageTeam/pages/detail/index?id=' + id
+    })
+  }
 
   render() {
+    const { list } = this.state
     return (
       <View className='container'>
-        <AtCard
-          note='加入时间：2020-10-10'
-          extra='0 人'
-          title='全国数学建模大赛'
-          thumb={images.leaderIcon}
-        >
-          <View className='content'>
-            <View className='left-side'>
-              <View>队员1：xxx，计算机学院-软件工程</View>
-              <View>联系方式：手机137xxxxxxxx</View>
-              <AtDivider>
-                <AtIcon value='check-circle'></AtIcon>
-              </AtDivider>
-              <View>队员2：xxx，计算机学院-软件工程</View>
-              <View>联系方式：手机137xxxxxxxx</View>
-            </View>
-            <View className='right-side'>
-              <AtTag
-                size='small'
-                type='primary'
-                circle
-                active
-              >进行中</AtTag>
-            </View>
-          </View>
-        </AtCard>
+        {
+          list.map((item, index) => {
+            var totalPeople = item.totalPeople
+            var id = item.id
+            if (item.parent != null) {
+              totalPeople = item.parent.totalPeople
+              id = item.parent.id
+            }
+            return (
+              <AtCard
+                onClick={this.toTeam.bind(this, id)}
+                className='card'
+                key={index}
+                note={'加入时间：' + item.createdAt}
+                extra={totalPeople + ' 人'}
+                title={item.matchInfo.title}
+                thumb={item.isSponsor ? images.leaderIcon : null}
+              >
+                <View className='content'>
+                  <View className='left-side'>
+                    {
+                      item.isSponsor && <View>
+                        <View>队员1：{item.profile.name}，{item.profile.collegeItem.title}-{item.profile.professionalItem.title}</View>
+                        <View>联系方式：{item.profile.mobile}</View>
+                      </View>
+                    }
+                    {
+                      item.isSponsor && item.children.map((value, i) => {
+                        return (
+                          <View key={i}>
+                            <AtDivider>
+                              <AtIcon value='check-circle'></AtIcon>
+                            </AtDivider>
+                            <View>队员{i + 2}：{value.profile.name}，{value.profile.collegeItem.title}-{value.profile.professionalItem.title}</View>
+                            <View>联系方式：{value.contact}</View>
+                          </View>
+                        )
+                      })
+                    }
+                    {
+                      !item.isSponsor && <View>
+                        <View>队员1：{item.parent.profile.name}，{item.parent.profile.collegeItem.title}-{item.parent.profile.professionalItem.title}</View>
+                        <View>联系方式：{item.parent.profile.mobile}</View>
+                      </View>
+                    }
+                    {
+                      !item.isSponsor && item.parent.children.map((value, i) => {
+                        return (
+                          <View key={i}>
+                            <AtDivider>
+                              <AtIcon value='check-circle'></AtIcon>
+                            </AtDivider>
+                            <View>队员{i + 2}：{value.profile.name}，{value.profile.collegeItem.title}-{value.profile.professionalItem.title}</View>
+                            <View>联系方式：{value.contact}</View>
+                          </View>
+                        )
+                      })
+                    }
+                  </View>
+                  <View className='right-side'>
+                    <AtTag
+                      size='small'
+                      type='primary'
+                      circle
+                      active
+                    >进行中</AtTag>
+                  </View>
+                </View>
+              </AtCard>
+            )
+          })
+        }
       </View>
     )
   }

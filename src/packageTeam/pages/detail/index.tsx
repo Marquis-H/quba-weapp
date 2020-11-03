@@ -18,7 +18,9 @@ import './index.scss'
 //
 // #endregion
 
-type PageStateProps = {}
+type PageStateProps = {
+  user: any
+}
 
 type PageDispatchProps = {
   add: () => void
@@ -36,7 +38,7 @@ interface Index {
   props: IProps;
 }
 
-@connect(() => ({}), () => ({}))
+@connect(({ user }) => ({ user }), () => ({}))
 class Index extends Component {
   state = {
     detail: null as any,
@@ -82,7 +84,7 @@ class Index extends Component {
     const { detail, show, application } = this.state
     const scrollTop = 0
     const Threshold = 20
-
+    var isShowAdd = true
     return (
       <View className='container'>
         {
@@ -122,6 +124,9 @@ class Index extends Component {
               />
               {
                 detail.children.map((item, index) => {
+                  if (item.profile.id == this.props.user.id) {
+                    isShowAdd = false
+                  }
                   return (
                     <AtListItem
                       iconInfo={{ size: 30, color: '#6190E8', value: 'user', }}
@@ -138,7 +143,7 @@ class Index extends Component {
           </ScrollView>
         }
         {
-          detail &&
+          detail && isShowAdd &&
           <View className='trade'>
             <AtButton type='primary' onClick={this.addTeam.bind(this, detail.id)}>
               加入队伍

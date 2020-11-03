@@ -40,10 +40,28 @@ function getTradeList(params = {}) {
     return request.get(`/weapp_user/trade/list`, params)
 }
 
+/**
+ * 组队记录
+ * @param params 
+ */
+function getTeamList(params = {}) {
+    return request.get(`/weapp_user/team/list`, params)
+}
+
+/**
+ * 移除队伍
+ * @param params 
+ */
+function removeTeam(params = {}) {
+    return request.post('/weapp_user/team/remove', params, 'application/json')
+}
+
 export default {
     getUserProfile,
     updateProfile,
     getLovePublishList,
     getIdlePublishList,
-    getTradeList
+    getTradeList,
+    getTeamList,
+    removeTeam
 }
