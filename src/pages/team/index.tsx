@@ -39,14 +39,16 @@ interface Index {
 @connect(() => ({}), () => ({}))
 class Index extends Component {
   state = {
-    list: []
+    list: [],
+    loading: false
   }
 
   componentDidShow() {
     matchApi.getMatchList().then(res => {
       if (res.code == 0) {
         this.setState({
-          list: res.data
+          list: res.data,
+          loading: true
         })
       }
     })
@@ -59,7 +61,7 @@ class Index extends Component {
   }
 
   render() {
-    const { list } = this.state
+    const { list, loading } = this.state
 
     return (
       <View className='container'>
@@ -78,6 +80,9 @@ class Index extends Component {
                 </View>
               )
             })
+          }
+          {
+            loading && list.length == 0 && <View style='text-align:center'>无记录</View>
           }
         </View>
       </View>

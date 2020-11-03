@@ -41,9 +41,7 @@ class Index extends Component {
   }
 
   componentDidShow() {
-    Taro.showLoading({
-      title: '暂未开放',
-    })
+
   }
 
   handleClick(value) {
