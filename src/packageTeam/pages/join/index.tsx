@@ -68,7 +68,7 @@ class Index extends Component {
     const { skills, matchExperience, contact } = this.state
     var errorMessages = [] as any
     if (skills == '') {
-      errorMessages.push("技能要求")
+      errorMessages.push("拥有技能")
     }
     if (matchExperience == '') {
       errorMessages.push("比赛经验")
@@ -109,13 +109,13 @@ class Index extends Component {
     return (
       <View className='container'>
         <AtForm>
-          <View className='title'>技能要求</View>
+          <View className='title'>拥有技能</View>
           <AtTextarea
             className='skill'
             value={skills}
             onChange={this.handleChange.bind(this, 'skills')}
             maxLength={200}
-            placeholder='请输入技能要求'
+            placeholder='请输入拥有技能'
           />
           <View className='title'>比赛经验</View>
           <AtTextarea

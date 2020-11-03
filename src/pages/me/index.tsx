@@ -187,7 +187,7 @@ class Index extends Component {
             <View className='header'>
               <AtAvatar image={avatar} circle className='my-avatar'></AtAvatar>
               <View className='txt' onClick={this.goTo}>
-                {nickname && getBind() ? nickname : "登录 / 绑定"}
+                {nickname ? nickname : "登录 / 绑定"}
                 <View style='font-size: 12px'>北京理工大学珠海学院</View>
               </View>
               <View style='margin-right:12px; margin-left:auto'>
