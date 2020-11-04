@@ -143,7 +143,7 @@ class Index extends Component {
           </ScrollView>
         }
         {
-          detail && isShowAdd &&
+          detail && isShowAdd && detail.profile.id != this.props.user.id &&
           <View className='trade'>
             <AtButton type='primary' onClick={this.addTeam.bind(this, detail.id)}>
               加入队伍
