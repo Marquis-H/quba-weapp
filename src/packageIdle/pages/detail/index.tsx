@@ -2,9 +2,11 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Swiper, SwiperItem, Image, ScrollView, Text } from '@tarojs/components'
-import { AtButton, AtTag, AtRate, AtMessage } from 'taro-ui'
+import { AtButton, AtTag, AtRate, AtMessage, AtIcon } from 'taro-ui'
 import idleApi from '../../../api/idle'
+import markApi from '../../../api/mark'
 import { Domain } from '../../../services/config'
+
 
 import './index.scss'
 
@@ -39,7 +41,8 @@ interface Index {
 @connect(() => ({}), () => ({}))
 class Index extends Component {
   state = {
-    detail: null as any
+    detail: null as any,
+    isMark: false
   }
 
   componentDidMount() {
@@ -52,6 +55,13 @@ class Index extends Component {
 
         Taro.setNavigationBarTitle({
           title: res.data.title
+        })
+      }
+    })
+    markApi.isMark({ id: params.id, slug: 'idle_application' }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          isMark: !(res.data instanceof Array)
         })
       }
     })
@@ -73,8 +83,18 @@ class Index extends Component {
     })
   }
 
+  mark = (id) => {
+    markApi.addMark({ id: id, module: 'idle_application' }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          isMark: true
+        })
+      }
+    })
+  }
+
   render() {
-    const { detail } = this.state
+    const { detail, isMark } = this.state
     const scrollTop = 0
     const Threshold = 20
     return (
@@ -131,8 +151,14 @@ class Index extends Component {
                       value={detail.oldDeep}
                     />
                   </View>
-                  <View className='at-col at-col-4'>
+                  <View className='at-col at-col-2'>
                     数量：x{detail.number}
+                  </View>
+                  <View className='at-col at-col-2' style='text-align:right'>
+                    {
+                      isMark ? <AtIcon value='heart-2' size='20' color='#F00'></AtIcon>
+                        : <AtIcon onClick={this.mark.bind(this, detail['id'])} value='heart' size='20' color='#F00'></AtIcon>
+                    }
                   </View>
                 </View>
               </View>

@@ -56,6 +56,22 @@ function removeTeam(params = {}) {
     return request.post('/weapp_user/team/remove', params, 'application/json')
 }
 
+/**
+ * mark记录
+ * @param params 
+ */
+function getMarkList(params = {}) {
+    return request.get(`/weapp_user/mark/list`, params)
+}
+
+/**
+ * 移除mark
+ * @param params 
+ */
+function removeMark(params = {}) {
+    return request.post('/weapp_user/mark/remove', params, 'application/json')
+}
+
 export default {
     getUserProfile,
     updateProfile,
@@ -63,5 +79,7 @@ export default {
     getIdlePublishList,
     getTradeList,
     getTeamList,
-    removeTeam
+    removeTeam,
+    getMarkList,
+    removeMark
 }

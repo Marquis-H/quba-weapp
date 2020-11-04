@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Image, Text } from '@tarojs/components'
-import { AtTag } from 'taro-ui'
+import { AtTag, AtIcon } from 'taro-ui'
 import * as images from '../../../../static/images/index';
 
 import './item.scss'
@@ -19,7 +19,7 @@ class Item extends Component {
 
     render() {
         const { onlineOrOffline, types } = this.state
-        const { title, endAt, tabs, matchCategory, peopleLimit, qualificationLimit } = this.props.item
+        const { title, endAt, tabs, matchCategory, peopleLimit, qualificationLimit, marks } = this.props.item
 
         return (
             <View className='container'>
@@ -31,8 +31,16 @@ class Item extends Component {
                                     <Image mode='aspectFill' className='img' src={images.logo} />
                                 </View>
                                 <View className='at-col info'>
-                                    <View className='title'>
-                                        {title}
+                                    <View className='at-row'>
+                                        <View className='at-col at-col-10' style='padding:0'>
+                                            <View className='title'>
+                                                {title}
+                                            </View>
+                                        </View>
+                                        <View className='at-col at-col-2' style='padding:0;text-align:center'>
+                                            <AtIcon value='heart-2' size='16' color='#F00'></AtIcon>
+                                            {marks}
+                                        </View>
                                     </View>
                                     <View className='desp'>
                                         {qualificationLimit}

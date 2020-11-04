@@ -2,10 +2,11 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, ScrollView, Text } from '@tarojs/components'
-import { AtTag, AtButton, AtMessage, AtList, AtListItem } from 'taro-ui'
+import { AtTag, AtButton, AtMessage, AtList, AtListItem, AtIcon } from 'taro-ui'
 import matchApi from '../../../api/match'
 import teamApi from '../../../api/team'
 import { Domain } from '../../../services/config'
+import markApi from '../../../api/mark'
 
 import './index.scss'
 
@@ -43,7 +44,8 @@ class Index extends Component {
     onlineOrOffline: ["线下比赛", "线上比赛"],
     types: ["国家级", "省级", "市级", "校级", "院级"],
     detail: null as any,
-    teamList: [] as any
+    teamList: [] as any,
+    isMark: false
   }
 
   componentDidShow() {
@@ -63,6 +65,13 @@ class Index extends Component {
       if (res.code == 0) {
         this.setState({
           teamList: res.data
+        })
+      }
+    })
+    markApi.isMark({ id: params.id, slug: 'match_info' }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          isMark: !(res.data instanceof Array)
         })
       }
     })
@@ -97,8 +106,18 @@ class Index extends Component {
     })
   }
 
+  mark = (id) => {
+    markApi.addMark({ id: id, module: 'match_info' }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          isMark: true
+        })
+      }
+    })
+  }
+
   render() {
-    const { onlineOrOffline, types, detail, teamList } = this.state
+    const { onlineOrOffline, types, detail, teamList, isMark } = this.state
     const scrollTop = 0
     const Threshold = 20
     return (
@@ -114,8 +133,18 @@ class Index extends Component {
             upperThreshold={Threshold}
           >
             <View className='content'>
-              <View className='title'>
-                {detail['title']}
+              <View className='at-row'>
+                <View className='at-col at-col-10' >
+                  <View className='title'>
+                    {detail['title']}
+                  </View>
+                </View>
+                <View className='at-col at-col-2' style='text-align:right'>
+                  {
+                    isMark ? <AtIcon value='heart-2' size='20' color='#F00'></AtIcon>
+                      : <AtIcon onClick={this.mark.bind(this, detail['id'])} value='heart' size='20' color='#F00'></AtIcon>
+                  }
+                </View>
               </View>
               <View className='status'>
                 {
