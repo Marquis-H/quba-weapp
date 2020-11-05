@@ -94,7 +94,7 @@ class Index extends Component {
                 }
               </AtList>
             }
-            {buysLoading && sales.length == 0 && <View style='text-align:center'>无记录</View>}
+            {buysLoading && buys.length == 0 && <View style='text-align:center'>无记录</View>}
           </AtTabsPane>
           <AtTabsPane current={this.state.current} index={1} className='tab-content'>
             {

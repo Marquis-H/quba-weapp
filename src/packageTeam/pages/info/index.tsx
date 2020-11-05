@@ -141,8 +141,8 @@ class Index extends Component {
                 </View>
                 <View className='at-col at-col-2' style='text-align:right'>
                   {
-                    isMark ? <AtIcon value='heart-2' size='20' color='#F00'></AtIcon>
-                      : <AtIcon onClick={this.mark.bind(this, detail['id'])} value='heart' size='20' color='#F00'></AtIcon>
+                    isMark ? <AtIcon value='heart-2' size='20' color='#ffb400'></AtIcon>
+                      : <AtIcon onClick={this.mark.bind(this, detail['id'])} value='heart' size='20' color='#ffb400'></AtIcon>
                   }
                 </View>
               </View>

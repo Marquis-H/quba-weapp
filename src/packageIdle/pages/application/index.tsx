@@ -239,6 +239,12 @@ class Index extends Component {
     if (description == '') {
       errorMessages.push("商品详情")
     }
+    if (famousPhoto.length == 0) {
+      errorMessages.push("封面图")
+    }
+    if (photos.length == 0) {
+      errorMessages.push("商品详情图")
+    }
 
     if (errorMessages.length > 0) {
       Taro.atMessage({
@@ -351,7 +357,7 @@ class Index extends Component {
             name='currentCost'
             title='商品现价'
             type='text'
-            placeholder='请输入单个商品仙剑'
+            placeholder='请输入单个商品现价'
             value={currentCost}
             onChange={this.handleChange.bind(this, 'currentCost')}
           />

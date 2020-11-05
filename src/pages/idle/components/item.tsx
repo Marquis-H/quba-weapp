@@ -34,7 +34,7 @@ class Item extends Component {
                                             </View>
                                         </View>
                                         <View className='at-col at-col-2' style='padding:0;text-align:center'>
-                                            <AtIcon value='heart-2' size='16' color='#F00'></AtIcon>
+                                            <AtIcon value='heart-2' size='16' color='#ffb400'></AtIcon>
                                             {marks}
                                         </View>
                                     </View>
