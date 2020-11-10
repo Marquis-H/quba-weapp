@@ -1,3 +1,3 @@
 export default {
-  navigationBarTitleText: '二手闲置'
+  navigationBarTitleText: '搜索'
 }

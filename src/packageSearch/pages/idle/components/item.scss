@@ -1,0 +1,68 @@
+.container {
+    flex-direction: column;
+    width: 100%;
+
+    .img {
+        width: 160px;
+        height: 160px;
+        border-radius: 10px;
+      }
+
+      .content{
+        display: flex;
+        justify-content: space-between;
+      }
+    
+      .left-side {
+        display: inline-block;
+      }
+      
+      .right-side {
+        display: inline-block;
+        padding-right: 20px;
+        .select-btn {
+           margin-top: 50px;
+           border-radius: 50%;
+           width: 75px;
+           height: 75px;
+           border: 2px solid #606060;
+        }
+        .selected {
+            background-color: #6190E8 ;
+        }
+      }
+
+      .at-row{
+        border-top: 0
+      }
+      .at-col {
+        text-align: left;
+        font-size: 28px;
+        color: #333;
+        max-height: 180px;
+      }
+      .title{
+        font-size: 30px;
+        font-weight: bold;
+      }
+
+      .desp{
+        font-size: 24px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        width: calc(100vw - 270px);
+      }
+    
+      .post{
+        background: #fff;
+        padding-top: 0;
+        margin: 0 auto;
+        margin-bottom: 10px;
+        box-shadow: 2px 4px 6px #eee;
+      }
+    
+      .at-swipe-action__option {
+        margin-bottom: 20px;
+      }
+}

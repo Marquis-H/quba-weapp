@@ -45,7 +45,7 @@ class Index extends Component {
     loading: false
   }
 
-  componentDidShow() {
+  componentWillMount() {
     this.setState({
       tabList: [{ id: 0, title: '全部' }],
       current: 0
@@ -57,6 +57,9 @@ class Index extends Component {
         })
       }
     })
+  }
+
+  componentDidShow() {
     this.handleGetIdleList(0)
   }
 
@@ -99,7 +102,7 @@ class Index extends Component {
     return (
       <View className='container'>
         <View className='search'>
-          <Navigator className='input'>
+          <Navigator className='input' url='/packageSearch/pages/idle/index'>
             <AtIcon className='icon' size='18' color='#666' value='search' />
             <Text className='txt'>商品搜索, 共238件闲置商品</Text>
           </Navigator>

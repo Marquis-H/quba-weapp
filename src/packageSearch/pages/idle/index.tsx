@@ -1,6 +1,11 @@
+import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
-import { View } from '@tarojs/components'
+import { View, Text, ScrollView, Navigator, Input } from '@tarojs/components';
+import { AtIcon } from 'taro-ui';
+import idleApi from '../../../api/idle'
+import Item from './components/item'
+import { getIdleSearch } from '../../../actions/search'
 
 import './index.scss'
 
@@ -17,12 +22,13 @@ import './index.scss'
 type PageStateProps = {}
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
+  onGetIdleSearch: (any) => any
 }
 
-type PageOwnProps = {}
+type PageOwnProps = {
+  defaultKeyword: any,
+  idleList: any
+}
 
 type PageState = {}
 
@@ -32,24 +38,246 @@ interface Index {
   props: IProps;
 }
 
-@connect(() => ({}), () => ({}))
+@connect(({ search }) => ({
+  defaultKeyword: search.defaultKeyword,
+  idleList: search.idles
+}), (dispatch) => ({
+  onGetIdleSearch(params) {
+    dispatch(getIdleSearch(params))
+  },
+}))
 class Index extends Component {
-  state = {}
-  componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
+  state = {
+    keyword: "",
+    searchStatus: false,
+    categoryFilter: false,
+    currentSortType: 'default',
+    currentSortOrder: null,
+    filterCategoryList: [] as any,
+    cId: 0
   }
 
-  componentWillUnmount() { }
+  componentWillMount() {
+    idleApi.getIdleCategory().then(res => {
+      if (res.code == 0) {
+        this.setState({
+          filterCategoryList: res.data
+        })
+      }
+    })
+  }
 
-  componentDidShow() { }
+  clearKeyword = () => {
+    console.log('清空输入框数据');
+    this.setState({
+      keyword: '',
+      searchStatus: false
+    });
+  }
 
-  componentDidHide() { }
+  inputChange = (e) => {
+    const { value } = e.target;
+    this.setState({
+      keyword: value,
+      searchStatus: false,
+    }, () => {
+      if (value) {
+        this.getHelpKeyword(value);
+      }
+    })
+  }
+
+  inputFocus = (e) => {
+    const { value } = e.target;
+    this.setState({
+      searchStatus: false,
+    }, () => {
+      if (value) {
+        this.getHelpKeyword(value);
+      }
+    })
+  }
+
+  onKeywordConfirm = (e) => {
+    this.getSearchResult(e.target.value);
+  }
+
+  getSearchResult = (keyword) => {
+    if (keyword === '') {
+      keyword = this.props.defaultKeyword.keyword;
+    }
+    this.setState({
+      keyword: keyword,
+      cId: 0,
+    }, () => {
+      this.getList();
+    });
+  }
+
+
+  getList = () => {
+    const { cId, keyword, currentSortOrder } = this.state
+    const { onGetIdleSearch } = this.props;
+    idleApi.search({ cId: cId, keyword: keyword, currentSortOrder }).then(res => {
+      if (res.code == 0) {
+        onGetIdleSearch(res.data)
+        this.setState({
+          searchStatus: true,
+          categoryFilter: false,
+        })
+      }
+    })
+    //重新获取关键词
+    this.getSearchKeyword();
+  }
+
+  getSearchKeyword = () => {
+
+  }
+
+  /**
+   * 获取搜索关键字
+   */
+  getHelpKeyword = (value) => {
+    console.log(value)
+  }
+
+  closeSearch = () => {
+    Taro.navigateBack()
+  }
+
+  openSortFilter = (currentId) => {
+    switch (currentId) {
+      case 'categoryFilter':
+        this.setState({
+          categoryFilter: !this.state.categoryFilter,
+          currentSortType: 'category',
+          currentSortOrder: 'desc'
+        });
+        break;
+      case 'priceSort':
+        let tmpSortOrder = 'asc';
+        if (this.state.currentSortOrder == 'asc') {
+          tmpSortOrder = 'desc';
+        }
+        this.setState({
+          currentSortType: 'price',
+          currentSortOrder: tmpSortOrder,
+          categoryFilter: false
+        }, () => {
+          this.getList();
+        });
+        break;
+      default:
+        //综合排序
+        this.setState({
+          currentSortType: 'default',
+          currentSortOrder: null,
+          categoryFilter: false,
+          cId: 0,
+        }, () => {
+          this.getList();
+        });
+    }
+  }
+
+  selectCategory = (categoryIndex) => {
+    const { filterCategoryList } = this.state;
+    let currentIndex = categoryIndex;
+    let filterCategory = filterCategoryList;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    let currentCategory = null as any;
+    for (let key in filterCategory) {
+      if (key == currentIndex) {
+        filterCategory[key].selected = true;
+        currentCategory = filterCategory[key];
+      } else {
+        filterCategory[key].selected = false;
+      }
+    }
+
+    this.setState({
+      categoryFilter: false,
+      cId: currentCategory.id
+    }, () => {
+      this.getList();
+    });
+  }
 
   render() {
+    const { defaultKeyword, idleList } = this.props
+    const { keyword, searchStatus, categoryFilter, currentSortType, currentSortOrder, filterCategoryList, cId } = this.state
+
     return (
-      <View className='container'>
-        二手闲置搜索
-      </View>
+      <ScrollView className='container'>
+        <View className='search-header'>
+          <View className='input-box'>
+            <AtIcon className='icon' size='18' color='#666' value='search' />
+            <Input
+              name='input'
+              className='keyword'
+              focus
+              value={keyword}
+              confirmType='search'
+              onInput={this.inputChange}
+              onFocus={this.inputFocus}
+              onConfirm={this.onKeywordConfirm}
+              placeholder={defaultKeyword.keyword}
+            />
+            {keyword && <AtIcon className='del' size='14' color='#666' onClick={this.clearKeyword} value='close' />}
+          </View>
+          <View className='right' onClick={this.closeSearch}>取消</View>
+        </View>
+        {
+          searchStatus && idleList.length && <View className='search-result'>
+            <View className='sort'>
+              <View className='sort-box'>
+                <View className={`item ${currentSortType == 'default' ? 'active' : ''}`} onClick={() => this.openSortFilter('defaultSort')}>
+                  <Text className='txt'>综合</Text>
+                </View>
+                <View className={`item ${currentSortType == 'price' ? 'active' : ''}`} onClick={() => this.openSortFilter('priceSort')}>
+                  <Text className='txt'>价格</Text>
+                  {
+                    currentSortType == 'price' && currentSortOrder == 'asc' && <AtIcon value='chevron-up' size='18' color='#666' />
+                  }
+                  {
+                    currentSortType == 'price' && currentSortOrder == 'desc' && <AtIcon value='chevron-down' size='18' color='#666' />
+                  }
+                </View>
+                <View className={`item ${currentSortType == 'category' ? 'active' : ''}`} onClick={() => this.openSortFilter('categoryFilter')}>
+                  <Text className='txt'>分类</Text>
+                </View>
+              </View>
+              {
+                categoryFilter && <View className='sort-box-category'>
+                  {
+                    Array.isArray(filterCategoryList) && filterCategoryList.map((item, index) => {
+                      return <View className={`item ${item.id == cId ? 'active' : ''}`} key={item.id} onClick={() => this.selectCategory(index)}>{item.title}</View>
+                    })
+                  }
+                </View>
+              }
+            </View>
+            <View className='cate-item'>
+              <View className='b'>
+                {
+                  idleList && idleList.map((item) => {
+                    return <Navigator url={'/packageIdle/pages/detail/index?id=' + item.id} key={item.id}>
+                      <Item item={item} />
+                    </Navigator>
+                  })
+                }
+              </View>
+            </View>
+          </View>
+        }
+
+        {
+          !idleList.length && searchStatus && <View className='search-result-empty'>
+            <Text className='text'>您寻找的商品还未上架</Text>
+          </View>
+        }
+      </ScrollView>
     )
   }
 }

@@ -96,7 +96,8 @@ function igoreUrl(url) {
         '/security/openid',
         '/security/check',
         '/security/bind',
-        '/web/banner'
+        '/web/banner',
+        '/idle/search'
     ]
     if (igoreUrlData.indexOf(url) == -1) { // 忽略token
         return getToken()

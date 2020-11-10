@@ -64,6 +64,14 @@ function changeIdleApplication(params = {}) {
     return request.post('/idle/change_idle_application', params, 'application/json')
 }
 
+/**
+ * 搜索
+ * @param params 
+ */
+function search(params = {}) {
+    return request.get('/idle/search', params)
+
+}
 
 export default {
     getIdleCategory,
@@ -73,5 +81,6 @@ export default {
     addTrade,
     trade,
     changeTrade,
-    changeIdleApplication
+    changeIdleApplication,
+    search
 }
