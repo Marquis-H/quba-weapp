@@ -41,7 +41,10 @@ interface Index {
 @connect(() => ({}), () => ({}))
 class Index extends Component {
   state = {
-    banners: []
+    banners: [],
+    idleApplications: 0,
+    matchInfos: 0,
+    matchApplications: 0
   }
   componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps)
@@ -54,6 +57,15 @@ class Index extends Component {
       if (res.code == 0) {
         this.setState({
           banners: res.data
+        })
+      }
+    })
+    webApi.getStatistic().then(res => {
+      if (res.code == 0) {
+        this.setState({
+          idleApplications: res.data.idleApplications,
+          matchInfos: res.data.matchInfos,
+          matchApplications: res.data.matchApplications
         })
       }
     })
@@ -80,7 +92,7 @@ class Index extends Component {
   }
 
   render() {
-    const { banners } = this.state
+    const { banners, idleApplications, matchInfos, matchApplications } = this.state
 
     return (
       <View className='container'>
@@ -110,7 +122,7 @@ class Index extends Component {
             </Image>
           </View>
           <View className='pkg-info'>
-            <Text className='foot-text'>已上架 999 個商品</Text>
+            <Text className='foot-text'>已上架 {idleApplications} 個商品</Text>
           </View>
         </View>
         <View className='pkg-bg' onClick={this.toTeam}>
@@ -119,7 +131,7 @@ class Index extends Component {
             </Image>
           </View>
           <View className='team-pkg-info'>
-            <Text className='foot-text'>20 个赛事，120个队伍</Text>
+            <Text className='foot-text'>{matchInfos} 个赛事，{matchApplications}个队伍</Text>
           </View>
         </View>
         <View className='pkg-bg' onClick={this.toLove}>

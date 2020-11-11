@@ -68,7 +68,7 @@ class Index extends Component {
         <View className='search'>
           <Navigator className='input' url='/packageSearch/pages/team/index'>
             <AtIcon className='icon' size='18' color='#666' value='search' />
-            <Text className='txt'>赛事搜索, 共20个参赛队伍</Text>
+            <Text className='txt'>赛事搜索, 共{list.length}个参赛队伍</Text>
           </Navigator>
         </View>
         <View className='item-content'>

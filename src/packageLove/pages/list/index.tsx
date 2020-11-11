@@ -187,7 +187,7 @@ class Index extends Component {
     const { commentLoading, loading, isOpened, loves, love, tips, guessValue, isCommentOpened, comments, commentValue } = this.state
 
     const scrollStyle = {
-      height: '150px'
+      height: '48vh'
     }
     const scrollTop = 0
     const Threshold = 20

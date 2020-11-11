@@ -104,7 +104,7 @@ class Index extends Component {
         <View className='search'>
           <Navigator className='input' url='/packageSearch/pages/idle/index'>
             <AtIcon className='icon' size='18' color='#666' value='search' />
-            <Text className='txt'>商品搜索, 共238件闲置商品</Text>
+            <Text className='txt'>商品搜索, 共{list.length}件闲置商品</Text>
           </Navigator>
         </View>
         <AtTabs scroll current={this.state.current} tabList={tabList} onClick={this.handleClick.bind(this)}>

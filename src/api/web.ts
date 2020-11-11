@@ -16,7 +16,16 @@ function getPage(params = {}) {
     return request.get(`/web/page`, params)
 }
 
+/**
+ * 静态数据
+ * @param params 
+ */
+function getStatistic(params = {}) {
+    return request.get(`/web/statistic`, params)
+}
+
 export default {
     getBanners,
-    getPage
+    getPage,
+    getStatistic
 }
