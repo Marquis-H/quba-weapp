@@ -97,6 +97,8 @@ function igoreUrl(url) {
         '/security/check',
         '/security/bind',
         '/web/banner',
+        '/web/page',
+        '/web/statistic',
         '/idle/search'
     ]
     if (igoreUrlData.indexOf(url) == -1) { // 忽略token

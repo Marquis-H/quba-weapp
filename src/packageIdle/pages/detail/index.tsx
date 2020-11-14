@@ -1,12 +1,13 @@
 import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
-import { View, Swiper, SwiperItem, Image, ScrollView, Text } from '@tarojs/components'
-import { AtButton, AtTag, AtRate, AtMessage, AtIcon } from 'taro-ui'
+import { View, Swiper, SwiperItem, Image, ScrollView, Text, Button } from '@tarojs/components'
+import { AtButton, AtTag, AtRate, AtMessage, AtIcon, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtTextarea } from 'taro-ui'
 import idleApi from '../../../api/idle'
+import idleMessageApi from '../../../api/idleMessage'
 import markApi from '../../../api/mark'
 import { Domain } from '../../../services/config'
-
+import Message from './components/message'
 
 import './index.scss'
 
@@ -20,7 +21,9 @@ import './index.scss'
 //
 // #endregion
 
-type PageStateProps = {}
+type PageStateProps = {
+  user: any
+}
 
 type PageDispatchProps = {
   add: () => void
@@ -38,11 +41,17 @@ interface Index {
   props: IProps;
 }
 
-@connect(() => ({}), () => ({}))
+@connect(({ user }) => ({ user }), () => ({}))
 class Index extends Component {
   state = {
     detail: null as any,
-    isMark: false
+    isMark: false,
+    messages: [] as any,
+    messageLoading: false,
+    openMessage: false,
+    message: "",
+    messageType: "",
+    messageId: null
   }
 
   componentDidMount() {
@@ -62,6 +71,19 @@ class Index extends Component {
       if (res.code == 0) {
         this.setState({
           isMark: !(res.data instanceof Array)
+        })
+      }
+    })
+    this.getIdleMessage()
+  }
+
+  getIdleMessage() {
+    var params = (getCurrentInstance() as any).router.params
+    idleMessageApi.getIdleMessage({ id: params.id }).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          messages: res.data,
+          messageLoading: true
         })
       }
     })
@@ -93,8 +115,52 @@ class Index extends Component {
     })
   }
 
+  onHandleMessage = (type) => {
+    this.setState({
+      messageType: type,
+      openMessage: true
+    })
+  }
+
+  onSubmitMessage = () => {
+    var params = (getCurrentInstance() as any).router.params
+    var data = {}
+    const { messageType, message, messageId } = this.state
+    switch (messageType) {
+      case "answer":
+        data = { id: params.id, comment: message, type: "buy", isReply: true }
+        break;
+      case "reply":
+        data = { id: messageId, comment: message, type: "sale", isReply: true }
+        break;
+    }
+    idleMessageApi.createIdleMessage(data).then(res => {
+      if (res.code == 0) {
+        this.setState({
+          openMessage: false
+        })
+        this.getIdleMessage()
+      }
+    })
+  }
+
+  handleChangeMessage = (value) => {
+    this.setState({
+      message: value
+    })
+  }
+
+  handleReply = (id) => {
+    this.setState({
+      messageType: 'reply',
+      openMessage: true,
+      messageId: id
+    })
+  }
+
   render() {
-    const { detail, isMark } = this.state
+    const { detail, isMark, messages, messageLoading, openMessage, messageType, message } = this.state
+    const { user } = this.props
     const scrollTop = 0
     const Threshold = 20
     return (
@@ -171,17 +237,54 @@ class Index extends Component {
                 商品原始购买链接：{detail.originalUrl ? detail.originalUrl : '-'}
               </View>
             </View>
+            <View className='message'>
+              问答区
+            </View>
+            <View className='message-content'>
+              {
+                messages.map(item => {
+                  return (
+                    <Message key={item.id} item={item} isReply={detail.profile.pid == user.profile.pid} onHandleReply={this.handleReply} />
+                  )
+                })
+              }
+              {
+                messageLoading && messages.length == 0 && <View style='text-align:center; padding: 10px'>无记录</View>
+              }
+            </View>
           </ScrollView>
         }
         {
           detail &&
           <View className='trade'>
-            <AtButton type='primary' disabled={detail.status == 'Online' ? false : true} onClick={this.addTrade}>
-              {detail.status == 'Online' ? "发起交易" : (detail.status == 'Doing' ? "交易中" : "下架")}
-            </AtButton>
+            <View className='at-row'>
+              {
+                detail.profile.pid != user.profile.pid && <View className='at-col at-col-1 at-col--auto' style='padding:0 20px' onClick={this.onHandleMessage.bind(this, "answer")}>
+                  <AtIcon value='message' size='25' color='rgb(153, 153, 153)'></AtIcon>
+                  <Text style='display: block;font-size: 12px'>提问</Text>
+                </View>
+              }
+              <View className='at-col' style='padding:0'>
+                <AtButton type='primary' disabled={detail.status == 'Online' ? false : true} onClick={this.addTrade}>
+                  {detail.status == 'Online' ? "发起交易" : (detail.status == 'Doing' ? "交易中" : "下架")}
+                </AtButton>
+              </View>
+            </View>
           </View>
         }
         <AtMessage />
+        <AtModal isOpened={openMessage}>
+          <AtModalHeader>{messageType == 'answer' ? '提问' : '回复'}</AtModalHeader>
+          <AtModalContent>
+            <AtTextarea
+              value={message}
+              onChange={this.handleChangeMessage.bind(this)}
+              maxLength={200}
+              placeholder='请输入...'
+            />
+          </AtModalContent>
+          <AtModalAction> <Button onClick={() => this.setState({ openMessage: false })}>取消</Button> <Button onClick={this.onSubmitMessage}>确定</Button> </AtModalAction>
+        </AtModal>
       </View>
     )
   }

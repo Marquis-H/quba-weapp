@@ -3,7 +3,7 @@
   width: 100%;
 
   .main-slider{
-    background-color: #e5e5e5;
+    background-color: rgb(249, 249, 249);
     height: 480px;
     .img{
       width:100%;
@@ -40,6 +40,18 @@
         padding: 30px 40px;
         color: #333;
         font-size: 28px;
+    }
+
+    .message{
+      margin-top: 20px;
+      background-color: #ffffff;
+      padding: 20px 40px;
+      color: #333;
+      font-size: 28px;
+    }
+    
+    .message-content{
+      padding: 20px;
     }
   }
 
