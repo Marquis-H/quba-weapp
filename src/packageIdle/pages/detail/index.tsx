@@ -106,10 +106,10 @@ class Index extends Component {
   }
 
   mark = (id) => {
-    markApi.addMark({ id: id, module: 'idle_application' }).then(res => {
+    markApi.addOrRemoveMark({ id: id, module: 'idle_application' }).then(res => {
       if (res.code == 0) {
         this.setState({
-          isMark: true
+          isMark: !this.state.isMark
         })
       }
     })
@@ -222,7 +222,7 @@ class Index extends Component {
                   </View>
                   <View className='at-col at-col-2' style='text-align:right'>
                     {
-                      isMark ? <AtIcon value='heart-2' size='20' color='#ffb400'></AtIcon>
+                      isMark ? <AtIcon value='heart-2' size='20' color='#ffb400' onClick={this.mark.bind(this, detail['id'])}></AtIcon>
                         : <AtIcon onClick={this.mark.bind(this, detail['id'])} value='heart' size='20' color='#ffb400'></AtIcon>
                     }
                   </View>

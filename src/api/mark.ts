@@ -12,12 +12,12 @@ function isMark(params = {}) {
  * 添加收藏
  * @param {*} params 
  */
-function addMark(params = {}) {
-    return request.post('/mark/add', params, 'application/json')
+function addOrRemoveMark(params = {}) {
+    return request.post('/mark/add_remove', params, 'application/json')
 }
 
 export default {
-    addMark,
+    addOrRemoveMark,
     isMark
 }
 
