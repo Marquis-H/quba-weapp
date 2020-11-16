@@ -38,6 +38,7 @@ interface Index {
 @connect(() => ({}), () => ({}))
 class Index extends Component {
   state = {
+    teamName: "",
     currentStatus: "",
     skill: "",
     experience: "",
@@ -47,6 +48,11 @@ class Index extends Component {
 
   handleChange(type, value) {
     switch (type) {
+      case "teamName":
+        this.setState({
+          teamName: value
+        })
+        break;
       case "currentStatus":
         this.setState({
           currentStatus: value
@@ -80,6 +86,7 @@ class Index extends Component {
     var params = (getCurrentInstance() as any).router.params
 
     const {
+      teamName,
       currentStatus,
       skill,
       experience,
@@ -88,6 +95,9 @@ class Index extends Component {
     } = this.state
 
     var errorMessages = [] as any
+    if (teamName == '') {
+      errorMessages.push("队伍名称")
+    }
     if (currentStatus == '') {
       errorMessages.push("项目现状")
     }
@@ -114,6 +124,7 @@ class Index extends Component {
     }
 
     teamApi.create({
+      teamName,
       currentStatus,
       skill,
       experience,
@@ -134,6 +145,7 @@ class Index extends Component {
 
   render() {
     const {
+      teamName,
       currentStatus,
       skill,
       experience,
@@ -146,12 +158,30 @@ class Index extends Component {
         <AtForm>
           <AtInput
             required
+            name='teamName'
+            title='队伍名称'
+            type='text'
+            placeholder='请输入队伍名称'
+            value={teamName}
+            onChange={this.handleChange.bind(this, 'teamName')}
+          />
+          <AtInput
+            required
             name='currentStatus'
             title='项目现状'
             type='text'
             placeholder='请输入项目现状'
             value={currentStatus}
             onChange={this.handleChange.bind(this, 'currentStatus')}
+          />
+          <AtInput
+            required
+            name='people'
+            title='人数'
+            type='number'
+            placeholder='请输入人数'
+            value={people}
+            onChange={this.handleChange.bind(this, 'people')}
           />
           <View className='title'>技能要求</View>
           <AtTextarea
@@ -168,15 +198,6 @@ class Index extends Component {
             onChange={this.handleChange.bind(this, 'experience')}
             maxLength={200}
             placeholder='请输入经验要求'
-          />
-          <AtInput
-            required
-            name='people'
-            title='人数'
-            type='number'
-            placeholder='请输入人数'
-            value={people}
-            onChange={this.handleChange.bind(this, 'people')}
           />
           <Picker value={joinEndAt} mode='date' onChange={this.onDateChange}>
             <AtList className='category' hasBorder={false}>

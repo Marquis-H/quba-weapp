@@ -187,7 +187,7 @@ class Index extends Component {
                       key={index}
                       arrow='right'
                       note={'目前队内人数 ' + (item.childrens + 1)}
-                      title={'队伍' + (index + 1)}
+                      title={'队伍' + (index + 1) + " " + (item.name ? item.name : "")}
                       extraText='加入'
                     />
                   )

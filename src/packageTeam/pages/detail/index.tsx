@@ -48,13 +48,14 @@ class Index extends Component {
 
   componentDidShow() {
     var params = (getCurrentInstance() as any).router.params
-    Taro.setNavigationBarTitle({
-      title: params.title
-    })
     teamApi.teamDetail({ id: params.id }).then(res => {
       if (res.code == 0) {
+        var data = res.data
+        Taro.setNavigationBarTitle({
+          title: params.title + " " + (data.name ? data.name : "")
+        })
         this.setState({
-          detail: res.data
+          detail: data
         })
       }
     })
