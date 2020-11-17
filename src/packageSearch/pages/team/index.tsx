@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, ScrollView, Navigator, Input } from '@tarojs/components';
@@ -141,6 +142,11 @@ class Index extends Component {
     });
   }
 
+  getCategoryName(item) {
+    var type = this.state.typesList.filter(value => value["value"] == item.type) as any
+    console.log(type[0])
+    return (item.isOnline ? "线上" : "线下") + "-" + type[0]['text'] + '-' + item.title
+  }
 
   getList = () => {
     const { cId, keyword, createdAtOrder, isOnline, type } = this.state
@@ -278,7 +284,7 @@ class Index extends Component {
                 categoryFilter && <View className='sort-box-category'>
                   {
                     Array.isArray(filterCategoryList) && filterCategoryList.map((item, index) => {
-                      return <View className={`item ${item.id == cId ? 'active' : ''}`} key={item.id} onClick={() => this.selectCategory(index)}>{item.title}</View>
+                      return <View className={`item ${item.id == cId ? 'active' : ''}`} key={item.id} onClick={() => this.selectCategory(index)}>{this.getCategoryName(item)}</View>
                     })
                   }
                 </View>

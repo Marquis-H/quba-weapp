@@ -5,6 +5,7 @@ import { View, Text, Navigator } from '@tarojs/components'
 import { AtIcon } from 'taro-ui';
 import matchApi from '../../api/match'
 import Item from './components/item'
+import Box from './components/box'
 
 import './index.scss'
 
@@ -40,11 +41,29 @@ interface Index {
 class Index extends Component {
   state = {
     list: [],
-    loading: false
+    loading: false,
+    categoryList: [],
+    cId: 0,
+    createdAtOrder: null
+  }
+
+  componentWillMount() {
+    matchApi.getMatchCategory().then(res => {
+      if (res.code == 0) {
+        this.setState({
+          categoryList: res.data
+        })
+      }
+    })
   }
 
   componentDidShow() {
-    matchApi.getMatchList().then(res => {
+    this.getMatchList()
+  }
+
+  getMatchList() {
+    const { cId, createdAtOrder } = this.state
+    matchApi.getMatchList({ cId, createdAtOrder }).then(res => {
       if (res.code == 0) {
         this.setState({
           list: res.data,
@@ -60,8 +79,17 @@ class Index extends Component {
     })
   }
 
+  handleBox(cId, createdAtOrder) {
+    this.setState({
+      cId,
+      createdAtOrder
+    }, () => {
+      this.getMatchList()
+    })
+  }
+
   render() {
-    const { list, loading } = this.state
+    const { list, loading, categoryList } = this.state
 
     return (
       <View className='container'>
@@ -71,6 +99,7 @@ class Index extends Component {
             <Text className='txt'>赛事搜索, 共{list.length}个参赛队伍</Text>
           </Navigator>
         </View>
+        <Box categoryList={categoryList} onHandleBox={this.handleBox.bind(this)} />
         <View className='item-content'>
           {
             list.map((item, index) => {
