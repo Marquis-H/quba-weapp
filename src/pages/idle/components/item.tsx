@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Image, Text } from '@tarojs/components'
-import { AtTag, AtIcon } from 'taro-ui'
+import { AtTag, AtIcon, AtBadge } from 'taro-ui'
 import { Domain } from '../../../services/config'
 
 import './item.scss'
@@ -15,7 +15,7 @@ class Item extends Component {
     state = {}
 
     render() {
-        const { famousPhoto, title, description, originalCost, currentCost, number, marks } = this.props.item
+        const { famousPhoto, title, description, originalCost, currentCost, number, marks, isTop } = this.props.item
 
         return (
             <View className='container'>
@@ -24,7 +24,11 @@ class Item extends Component {
                         <View className='content'>
                             <View className='at-row'>
                                 <View className='at-col at-col-1 at-col--auto'>
-                                    <Image mode='aspectFill' className='img' src={Domain + famousPhoto} />
+                                    {
+                                        isTop ? <AtBadge value='置顶'>
+                                            <Image mode='aspectFill' className='img' src={Domain + famousPhoto} />
+                                        </AtBadge> : <Image mode='aspectFill' className='img' src={Domain + famousPhoto} />
+                                    }
                                 </View>
                                 <View className='at-col info'>
                                     <View className='at-row'>
