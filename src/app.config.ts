@@ -4,7 +4,8 @@ export default {
     'pages/idle/index', // 二手闲置
     'pages/team/index', // 组队
     'pages/me/index', // 我的
-    'pages/page/index' // 页面
+    'pages/page/index', // 页面
+    'pages/message/index', // 消息
   ],
   subPackages: [
     {
@@ -49,18 +50,24 @@ export default {
         'pages/list/index', // 表白墙
         'pages/application/index', // 表白
       ]
+    },
+    {
+      root: 'packageMessage',
+      pages: [
+        'pages/message/index', // 一对一的消息对话
+      ]
     }
   ],
   window: {
     backgroundTextStyle: 'dark',
-    navigationBarBackgroundColor: '#ffb400',
-    navigationBarTitleText: 'ClickFarm',
-    navigationBarTextStyle: 'white'
+    navigationBarBackgroundColor: '#ffffff',
+    navigationBarTitleText: '有寻',
+    navigationBarTextStyle: 'black',
   },
   tabBar: {
-    selectedColor: '#ff8c00',
-    backgroundColor: '#000000',
-    color: '#ffffff',
+    selectedColor: '#f7454e',
+    backgroundColor: '#ffffff',
+    color: '#8a8a8a',
     list: [
       {
         pagePath: 'pages/index/index',
@@ -69,22 +76,16 @@ export default {
         selectedIconPath: 'images/home.png'
       },
       {
-        pagePath: 'pages/idle/index',
-        text: "二手闲置",
-        iconPath: 'images/idle-s.png',
-        selectedIconPath: 'images/idle.png'
-      },
-      {
-        pagePath: 'pages/team/index',
-        text: "赛事",
-        iconPath: 'images/team-s.png',
-        selectedIconPath: 'images/team.png'
+        pagePath: 'pages/message/index',
+        text: "消息",
+        iconPath: 'images/message-s.png',
+        selectedIconPath: 'images/message.png'
       },
       {
         pagePath: 'pages/me/index',
         text: '我的',
-        iconPath: 'images/my.png',
-        selectedIconPath: 'images/my-s.png'
+        iconPath: 'images/my-s.png',
+        selectedIconPath: 'images/my.png'
       }
     ]
   },

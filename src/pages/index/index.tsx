@@ -1,8 +1,8 @@
 import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Swiper, SwiperItem, Image } from '@tarojs/components'
-import { AtIcon } from 'taro-ui';
+import { View, Swiper, SwiperItem, Image } from '@tarojs/components'
+import { AtGrid, AtMessage } from 'taro-ui'
 import * as images from '../../../static/images/index';
 import webApi from '../../api/web'
 
@@ -42,9 +42,10 @@ interface Index {
 class Index extends Component {
   state = {
     banners: [],
-    idleApplications: 0,
-    matchInfos: 0,
-    matchApplications: 0
+    topicBanners: []
+    // idleApplications: 0,
+    // matchInfos: 0,
+    // matchApplications: 0
   }
   componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps)
@@ -60,27 +61,34 @@ class Index extends Component {
         })
       }
     })
-    webApi.getStatistic().then(res => {
+    webApi.getBanners({ slug: 'hot-topic-banner' }).then(res => {
       if (res.code == 0) {
         this.setState({
-          idleApplications: res.data.idleApplications,
-          matchInfos: res.data.matchInfos,
-          matchApplications: res.data.matchApplications
+          topicBanners: res.data
         })
       }
     })
+    // webApi.getStatistic().then(res => {
+    //   if (res.code == 0) {
+    //     this.setState({
+    //       idleApplications: res.data.idleApplications,
+    //       matchInfos: res.data.matchInfos,
+    //       matchApplications: res.data.matchApplications
+    //     })
+    //   }
+    // })
   }
 
   componentDidHide() { }
 
   toIdle() {
-    Taro.switchTab({
+    Taro.navigateTo({
       url: "/pages/idle/index"
     })
   }
 
   toTeam() {
-    Taro.switchTab({
+    Taro.navigateTo({
       url: "/pages/team/index"
     })
   }
@@ -91,14 +99,34 @@ class Index extends Component {
     })
   }
 
+  toModule = (e) => {
+    switch (e.value) {
+      case '二手交易':
+        this.toIdle()
+        break;
+      case '比赛组队':
+        this.toTeam()
+        break;
+      case '互动表白墙':
+        this.toLove()
+        break;
+      case '讨论区':
+        Taro.atMessage({
+          'message': '暂未开放',
+          'type': "warning",
+        })
+        break;
+    }
+  }
+
   render() {
-    const { banners, idleApplications, matchInfos, matchApplications } = this.state
+    const { banners, topicBanners } = this.state
 
     return (
       <View className='container'>
         <View className='address'>
-          <AtIcon className='icon' size='18' color='#fff' value='map-pin' />
-          <Text className='txt'>北京理工大学珠海学院</Text>
+          {/* <AtIcon className='icon' size='18' color='#fff' value='map-pin' />
+          <Text className='txt'>北京理工大学珠海学院</Text> */}
         </View>
         <View className='app-banner'>
           <Swiper className='banner' indicatorDots autoplay interval={3000} duration={100}>
@@ -116,7 +144,38 @@ class Index extends Component {
             }
           </Swiper>
         </View>
-        <View className='pkg-bg' onClick={this.toIdle}>
+        <AtGrid className='grid' onClick={this.toModule} hasBorder={false} columnNum={4} data={
+          [
+            {
+              image: images.idleIcon,
+              value: '二手交易'
+            },
+            {
+              image: images.teamIcon,
+              value: '比赛组队'
+            },
+            {
+              image: images.loveIcon,
+              value: '互动表白墙'
+            },
+            {
+              image: images.discussionIcon,
+              value: '讨论区'
+            }
+          ]
+        }
+        />
+        {
+          topicBanners.map((item, index) => {
+            return <View className='pkg-bg' key={index}>
+              <View className='image'>
+                <Image src={item['file']} className='pkg-img' mode='widthFix'>
+                </Image>
+              </View>
+            </View>
+          })
+        }
+        {/* <View className='pkg-bg' onClick={this.toIdle}>
           <View className='image'>
             <Image src={images.idleBanner} className='pkg-img' mode='widthFix'>
             </Image>
@@ -124,8 +183,8 @@ class Index extends Component {
           <View className='pkg-info'>
             <Text className='foot-text'>已上架 {idleApplications} 個商品</Text>
           </View>
-        </View>
-        <View className='pkg-bg' onClick={this.toTeam}>
+        </View> */}
+        {/* <View className='pkg-bg' onClick={this.toTeam}>
           <View className='image'>
             <Image src={images.teamBanner} className='pkg-img' mode='widthFix'>
             </Image>
@@ -139,7 +198,8 @@ class Index extends Component {
             <Image src={images.loveBanner} className='pkg-img' mode='widthFix'>
             </Image>
           </View>
-        </View>
+        </View> */}
+        <AtMessage />
       </View>
     )
   }
