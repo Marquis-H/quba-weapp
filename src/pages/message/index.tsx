@@ -112,7 +112,6 @@ class Index extends Component {
             <Input
               name='input'
               className='keyword'
-              focus
               value={keyword}
               confirmType='search'
               onInput={this.inputChange}
