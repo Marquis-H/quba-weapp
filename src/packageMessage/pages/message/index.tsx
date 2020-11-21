@@ -1,7 +1,8 @@
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, ScrollView } from '@tarojs/components';
-import { getIdleSearch } from '../../../actions/search'
+import { AtTabBar, AtButton, AtInput } from 'taro-ui'
+import Item from './components/item'
 
 import './index.scss'
 
@@ -18,12 +19,10 @@ import './index.scss'
 type PageStateProps = {}
 
 type PageDispatchProps = {
-  onGetIdleSearch: (any) => any
 }
 
 type PageOwnProps = {
   defaultKeyword: any,
-  idleList: any
 }
 
 type PageState = {}
@@ -36,26 +35,84 @@ interface Index {
 
 @connect(({ search }) => ({
   defaultKeyword: search.defaultKeyword,
-  idleList: search.idles
-}), (dispatch) => ({
-  onGetIdleSearch(params) {
-    dispatch(getIdleSearch(params))
-  },
-}))
+}), () => ({}))
 class Index extends Component {
   state = {
+    value: '',
+    messages: [{
+      nickname: 'Marquis Hou',
+      avatar: "https://thirdwx.qlogo.cn/mmopen/vi_32/llnfgSfqI1YDkErib7PsUIKLMBSg04HdaWNeMv6y5dxTNX2zzZIYsiceX8dHEumYEZUTbIGX8h4f4XJ2qzW5dC2w/132",
+      content: "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试",
+      dateAt: "09:15",
+      isMe: false
+    },
+    {
+      nickname: 'Marquis Hou',
+      avatar: "https://thirdwx.qlogo.cn/mmopen/vi_32/llnfgSfqI1YDkErib7PsUIKLMBSg04HdaWNeMv6y5dxTNX2zzZIYsiceX8dHEumYEZUTbIGX8h4f4XJ2qzW5dC2w/132",
+      content: "测试测试测试测试测试测试测试测试测试测试测试测试",
+      dateAt: "09:16",
+      isMe: true
+    }]
   }
 
   componentWillMount() {
 
   }
 
+  handleClick = (value) => {
+    console.log(value)
+  }
+
+  handleChange = (value) => {
+    this.setState({
+      value
+    })
+    // 在小程序中，如果想改变 value 的值，需要 `return value` 从而改变输入框的当前值
+    return value
+  }
+
   render() {
+    const { value, messages } = this.state
+
     return (
-      <ScrollView className='container'>
-        <View className='content'>
+      <View className='container'>
+        <ScrollView className='content'>
+          {
+            messages.map((item, index) => {
+              return (
+                <View className='item' key={index}>
+                  <Item item={item} />
+                </View>
+              )
+            })
+          }
+        </ScrollView>
+        <View className='send'>
+          <View className='at-row'>
+            <View className='at-col at-col-10 at-col--auto'>
+              <AtInput
+                name='value'
+                type='text'
+                placeholder='请输入...'
+                value={value}
+                onChange={this.handleChange.bind(this)}
+              />
+            </View>
+            <View className='at-col'>
+              <AtButton type='primary' size='small'>发送</AtButton>
+            </View>
+          </View>
         </View>
-      </ScrollView>
+        <AtTabBar
+          fixed
+          tabList={[
+            { title: '相片', iconType: 'image' },
+            { title: '拍照', iconType: 'camera' },
+          ]}
+          onClick={this.handleClick.bind(this)}
+          current={-1}
+        />
+      </View>
     )
   }
 }

@@ -1,7 +1,9 @@
+import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, ScrollView, Input, Text } from '@tarojs/components';
 import { AtIcon } from 'taro-ui';
+import Item from './components/item'
 
 import './index.scss'
 
@@ -41,7 +43,22 @@ interface Index {
 class Index extends Component {
   state = {
     keyword: "",
-    messageList: []
+    messageList: [
+      {
+        avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/llnfgSfqI1YDkErib7PsUIKLMBSg04HdaWNeMv6y5dxTNX2zzZIYsiceX8dHEumYEZUTbIGX8h4f4XJ2qzW5dC2w/132',
+        nickname: 'Marquis Hou',
+        content: '测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
+        badge: 10,
+        lastAt: '09:15'
+      },
+      {
+        avatar: 'https://thirdwx.qlogo.cn/mmopen/vi_32/llnfgSfqI1YDkErib7PsUIKLMBSg04HdaWNeMv6y5dxTNX2zzZIYsiceX8dHEumYEZUTbIGX8h4f4XJ2qzW5dC2w/132',
+        nickname: 'Marquis Hou',
+        content: '测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
+        badge: 10,
+        lastAt: '09:15'
+      }
+    ]
   }
 
   componentWillMount() {
@@ -101,6 +118,13 @@ class Index extends Component {
 
   }
 
+  toDetail = (id) => {
+    console.log(id)
+    Taro.navigateTo({
+      url: '/packageMessage/pages/message/index'
+    })
+  }
+
   render() {
     const { keyword, messageList } = this.state
 
@@ -123,7 +147,16 @@ class Index extends Component {
           </View>
           <View className='right' onClick={this.closeSearch}>取消</View>
         </View>
-        <View className='content'>
+        <View className='item-content'>
+          {
+            messageList.map((item, index) => {
+              return (
+                <View className='item' key={index} onClick={this.toDetail.bind(this, item['id'])}>
+                  <Item item={item} />
+                </View>
+              )
+            })
+          }
           {
             !messageList.length && <View className='search-result-empty'>
               <Text className='text'>无记录</Text>

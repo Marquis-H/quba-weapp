@@ -56,7 +56,7 @@ class Index extends Component {
 
   toTeam = (id) => {
     Taro.navigateTo({
-      url: '/packageTeam/pages/detail/index?id=' + id
+      url: '/packageTeam/pages/detail/index?id=' + id + '&title=队伍'
     })
   }
 
