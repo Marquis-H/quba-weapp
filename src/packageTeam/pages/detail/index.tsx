@@ -5,6 +5,7 @@ import { View, ScrollView, Text } from '@tarojs/components'
 import { AtButton, AtMessage, AtList, AtListItem, AtModal } from 'taro-ui'
 import teamApi from '../../../api/team'
 import * as images from '../../../../static/images'
+import { getProfile } from '../../../actions/user'
 
 import './index.scss'
 
@@ -23,9 +24,7 @@ type PageStateProps = {
 }
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
+  onGetProfile: () => void
 }
 
 type PageOwnProps = {}
@@ -38,7 +37,11 @@ interface Index {
   props: IProps;
 }
 
-@connect(({ user }) => ({ user }), () => ({}))
+@connect(({ user }) => ({ user }), (dispatch) => ({
+  onGetProfile() {
+    dispatch(getProfile())
+  },
+}))
 class Index extends Component {
   state = {
     detail: null as any,
@@ -59,6 +62,7 @@ class Index extends Component {
         })
       }
     })
+    this.props.onGetProfile()
   }
 
   addTeam = (id) => {
@@ -68,6 +72,7 @@ class Index extends Component {
   }
 
   onShow = (item) => {
+    console.log(item)
     this.setState({
       show: true,
       application: item
@@ -86,6 +91,9 @@ class Index extends Component {
     const scrollTop = 0
     const Threshold = 20
     var isShowAdd = true
+    if (detail && detail.profile.pid == this.props.user.profile.id) {
+      isShowAdd = false
+    }
     return (
       <View className='container'>
         {
@@ -122,10 +130,11 @@ class Index extends Component {
                 title={detail.profile.name}
                 extraText='发起人'
                 thumb={images.leaderIcon}
+                onClick={this.onShow.bind(this, detail)}
               />
               {
                 detail.children.map((item, index) => {
-                  if (item.profile.id == this.props.user.id) {
+                  if (item.profile.pid == this.props.user.profile.id) {
                     isShowAdd = false
                   }
                   return (
@@ -161,9 +170,9 @@ class Index extends Component {
             onConfirm={this.handleConfirm}
             content={`学院：${application.profile.collegeItem.title}\n\r
             专业：${application.profile.professionalItem.title}\n\r
-            拥有技能：${application.skills}\n\r
-            比赛经验：${application.matchExperience}\n\r
-            联系方式：${application.contact}`}
+            拥有技能：${application.skills ? application.skills : '-'}\n\r
+            比赛经验：${application.matchExperience ? application.matchExperience : '-'}\n\r
+            联系方式：${application.contact ? application.contact : application.profile.mobile}`}
           />
         }
       </View>

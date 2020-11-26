@@ -36,21 +36,21 @@ class Item extends Component {
     render() {
         const { item, index } = this.props
         const { isLike } = this.state
-        const genderShow = item['gender'] == 'M' ? "li male" : (item['gender'] == 'F' ? "li female" : "li");
-        const taGenderShow = item['taGender'] == 'M' ? "li female" : (item['taGender'] == 'F' ? "li female" : "li");
+        // const genderShow = item['gender'] == 'M' ? "li male" : (item['gender'] == 'F' ? "li female" : "li");
+        // const taGenderShow = item['taGender'] == 'M' ? "li female" : (item['taGender'] == 'F' ? "li female" : "li");
 
         return (
             <View className='container'>
                 <View className='post'>
                     <View className='post-title'>
                         <View className='ul'>
-                            <Text className={genderShow}>
+                            {/* <Text className={genderShow}>
                                 {item['nickname']}
                             </Text>
                             <AtIcon className='li' value='heart-2' size='20' color='#ef5350'></AtIcon>
                             <Text className={taGenderShow}>
                                 {item['taName']}
-                            </Text>
+                            </Text> */}
                         </View>
                     </View>
                     <View className='post-body'>

@@ -41,6 +41,7 @@ class Index extends Component {
     teamName: "",
     currentStatus: "",
     skill: "",
+    skills: "",
     experience: "",
     people: "",
     joinEndAt: ""
@@ -61,6 +62,11 @@ class Index extends Component {
       case "skill":
         this.setState({
           skill: value
+        })
+        break;
+      case "skills":
+        this.setState({
+          skills: value
         })
         break;
       case "experience":
@@ -89,6 +95,7 @@ class Index extends Component {
       teamName,
       currentStatus,
       skill,
+      skills,
       experience,
       people,
       joinEndAt
@@ -103,6 +110,9 @@ class Index extends Component {
     }
     if (skill == '') {
       errorMessages.push("技能要求")
+    }
+    if (skills == '') {
+      errorMessages.push("拥有技能")
     }
     if (experience == '') {
       errorMessages.push("经验要求")
@@ -127,6 +137,7 @@ class Index extends Component {
       teamName,
       currentStatus,
       skill,
+      skills,
       experience,
       people,
       joinEndAt,
@@ -148,6 +159,7 @@ class Index extends Component {
       teamName,
       currentStatus,
       skill,
+      skills,
       experience,
       people,
       joinEndAt
@@ -198,6 +210,14 @@ class Index extends Component {
             onChange={this.handleChange.bind(this, 'experience')}
             maxLength={200}
             placeholder='请输入经验要求'
+          />
+          <View className='title'>拥有技能</View>
+          <AtTextarea
+            className='skills'
+            value={skills}
+            onChange={this.handleChange.bind(this, 'skills')}
+            maxLength={200}
+            placeholder='请输入拥有技能'
           />
           <Picker value={joinEndAt} mode='date' onChange={this.onDateChange}>
             <AtList className='category' hasBorder={false}>

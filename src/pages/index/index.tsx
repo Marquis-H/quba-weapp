@@ -119,6 +119,13 @@ class Index extends Component {
     }
   }
 
+  preview = (item) => {
+    Taro.previewImage({
+      current: '', // 当前显示图片的http链接
+      urls: [item['file']] // 需要预览的图片http链接列表
+    })
+  }
+
   render() {
     const { banners, topicBanners } = this.state
 
@@ -132,7 +139,7 @@ class Index extends Component {
           <Swiper className='banner' indicatorDots autoplay interval={3000} duration={100}>
             {
               banners.map(item => {
-                return <SwiperItem key={item['title']}>
+                return <SwiperItem key={item['title']} onClick={this.preview.bind(this, item)}>
                   <View className='banner-item'>
                     <Image
                       className='img'
