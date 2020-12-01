@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, ScrollView, Input, Text } from '@tarojs/components';
-import { AtIcon } from 'taro-ui';
+import { AtIcon, AtModal } from 'taro-ui';
 import Item from './components/item'
 
 import './index.scss'
@@ -163,6 +163,11 @@ class Index extends Component {
             </View>
           }
         </View>
+        <AtModal
+          isOpened
+          title='暂未开放，敬请期待'
+          closeOnClickOverlay={false}
+        />
       </ScrollView>
     )
   }
