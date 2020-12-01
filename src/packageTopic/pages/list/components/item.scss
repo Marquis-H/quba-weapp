@@ -1,0 +1,86 @@
+ .container{
+ .post{
+    background: #fff;
+    padding-top: 10px;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    box-shadow: 2px 4px 6px #eee;
+  }
+  .post-title{
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 0px;
+  }
+  .post-title .ul{
+    list-style-type:none;
+    margin:0;
+    padding:0;
+    /*text-align: center;*/
+    font-size: 32px;
+    text-align: left;
+  }
+  .post-title .ul .li{
+    display: inline;
+    margin-right: 10px;
+  }
+  .post-title .ul .male{
+    color: #03a9f4
+  }
+  .post-title .ul .female{
+    color: #ff3333;
+  }
+  .post-body .post-body-content{
+    word-wrap: break-word;
+    text-indent: 2em;
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 0px;
+    color: #333;
+    text-align: left;
+    display: block;
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+  }
+  .post-body-time{
+    text-align: right;
+    text-indent: 0em;
+    padding: 0px;
+    color: #b3b3b3;
+    padding-right: 20px;
+    font-size: 22px;
+    display: block;
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+  }
+
+.at-row{
+    border-top: 1px solid #eee;
+}
+
+.at-col{
+    padding: 10px;
+    text-align: center;
+    font-size: 32px;
+    .at-icon{
+        margin-right: 5px;
+    }
+    .at-icon-star{
+        margin-top: -5px;
+    }
+    .at-icon-share{
+        margin-top: -3px;
+    }
+    .at-icon-heart-2{
+      margin-top: -2px;
+    }
+    .at-icon-heart{
+      margin-top: -2px;
+    }
+}
+}

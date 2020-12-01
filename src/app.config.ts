@@ -56,6 +56,13 @@ export default {
       pages: [
         'pages/message/index', // 一对一的消息对话
       ]
+    },
+    {
+      root: 'packageTopic',
+      pages: [
+        'pages/list/index', // 话题列表
+        'pages/comment/index' // 话题评论
+      ]
     }
   ],
   window: {

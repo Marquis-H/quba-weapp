@@ -99,7 +99,8 @@ function igoreUrl(url) {
         '/web/banner',
         '/web/page',
         '/web/statistic',
-        '/idle/search'
+        '/idle/search',
+        '/topic/hot'
     ]
     if (igoreUrlData.indexOf(url) == -1) { // 忽略token
         return getToken()

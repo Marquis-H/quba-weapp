@@ -99,6 +99,12 @@ class Index extends Component {
     })
   }
 
+  toTopic() {
+    Taro.navigateTo({
+      url: "/packageTopic/pages/list/index"
+    })
+  }
+
   toModule = (e) => {
     switch (e.value) {
       case '二手交易':
@@ -111,10 +117,7 @@ class Index extends Component {
         this.toLove()
         break;
       case '讨论区':
-        Taro.atMessage({
-          'message': '暂未开放',
-          'type': "warning",
-        })
+        this.toTopic()
         break;
     }
   }
