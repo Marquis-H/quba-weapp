@@ -227,12 +227,14 @@ class Index extends Component {
             <AtModal isOpened={openComment}>
               <AtModalHeader>评论</AtModalHeader>
               <AtModalContent>
-                <AtTextarea
-                  value={comment}
-                  onChange={this.handleChangeComment.bind(this)}
-                  maxLength={200}
-                  placeholder='请输入...'
-                />
+                {
+                  openComment && <AtTextarea
+                    value={comment}
+                    onChange={this.handleChangeComment.bind(this)}
+                    maxLength={200}
+                    placeholder='请输入...'
+                  />
+                }
               </AtModalContent>
               <AtModalAction> <Button onClick={() => this.setState({ openComment: false })}>取消</Button> <Button onClick={this.onSubmitComment}>确定</Button> </AtModalAction>
             </AtModal>

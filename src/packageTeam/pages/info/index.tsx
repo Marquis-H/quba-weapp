@@ -173,7 +173,7 @@ class Index extends Component {
                 }
               </View>
               {
-                detail.files && <View className='file'>
+                detail.files.length > 0 && <View className='file'>
                   相关文件：<Text style='color:#78A4F4' onClick={this.copyText.bind(this, Domain + detail.files[0]['response']['data']['file'])}>文件</Text>
                 </View>
               }

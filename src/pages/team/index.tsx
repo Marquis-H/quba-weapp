@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Navigator } from '@tarojs/components'
+import { View, Text, Navigator, ScrollView } from '@tarojs/components'
 import { AtIcon } from 'taro-ui';
 import matchApi from '../../api/match'
 import Item from './components/item'
@@ -90,30 +90,39 @@ class Index extends Component {
 
   render() {
     const { list, loading, categoryList } = this.state
+    const scrollStyle = {
+      height: 'calc(100vh - 45px)'
+    }
 
     return (
       <View className='container'>
         <View className='search'>
           <Navigator className='input' url='/packageSearch/pages/team/index'>
             <AtIcon className='icon' size='18' color='#666' value='search' />
-            <Text className='txt'>赛事搜索, 共{list.length}个参赛队伍</Text>
+            <Text className='txt'>赛事搜索, 共{list.length}个比赛</Text>
           </Navigator>
         </View>
         <Box categoryList={categoryList} onHandleBox={this.handleBox.bind(this)} />
-        <View className='item-content'>
-          {
-            list.map((item, index) => {
-              return (
-                <View key={index} onClick={this.toDetail.bind(this, item['id'])}>
-                  <Item item={item} />
-                </View>
-              )
-            })
-          }
-          {
-            loading && list.length == 0 && <View style='text-align:center'>无记录</View>
-          }
-        </View>
+        <ScrollView
+          scrollY
+          scrollWithAnimation
+          style={scrollStyle}
+        >
+          <View className='item-content'>
+            {
+              list.map((item, index) => {
+                return (
+                  <View key={index} onClick={this.toDetail.bind(this, item['id'])}>
+                    <Item item={item} />
+                  </View>
+                )
+              })
+            }
+            {
+              loading && list.length == 0 && <View style='text-align:center'>无记录</View>
+            }
+          </View>
+        </ScrollView>
       </View>
     )
   }

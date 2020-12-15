@@ -14,7 +14,7 @@ interface Item {
 class Item extends Component {
     state = {
         onlineOrOffline: ["线下比赛", "线上比赛"],
-        types: ["国家级", "省级", "市级", "校级", "院级"]
+        types: ["", "国家级", "省级", "市级", "校级", "院级"]
     }
 
     render() {
