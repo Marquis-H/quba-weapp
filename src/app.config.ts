@@ -6,6 +6,7 @@ export default {
     'pages/me/index', // 我的
     'pages/page/index', // 页面
     'pages/message/index', // 消息
+    'pages/webview/index', // webview
   ],
   subPackages: [
     {

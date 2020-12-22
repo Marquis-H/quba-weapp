@@ -42,7 +42,7 @@ interface Index {
 class Index extends Component {
   state = {
     banners: [],
-    topicBanners: []
+    topicBanners: [],
     // idleApplications: 0,
     // matchInfos: 0,
     // matchApplications: 0
@@ -123,10 +123,10 @@ class Index extends Component {
   }
 
   preview = (item) => {
-    Taro.previewImage({
-      current: '', // 当前显示图片的http链接
-      urls: [item['file']] // 需要预览的图片http链接列表
-    })
+    if (item['url'])
+      Taro.navigateTo({
+        url: "/pages/webview/index?url=" + item['url']
+      })
   }
 
   render() {
