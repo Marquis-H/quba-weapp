@@ -215,14 +215,14 @@ class Index extends Component {
             已猜中 {love['guessRight']} 次，被猜 {love['guess']} 次
           <View className='cai'>
               <Text className='text' style='margin-left: 0'>猜猜发起者的名字</Text>
-              <AtInput
+              {isOpened && <AtInput
                 name='name'
                 type='text'
                 value={guessValue}
                 placeholder='名字'
                 className='input'
                 onChange={this.handleCai.bind(this)}
-              />
+              />}
             </View>
             <AtButton type='primary' onClick={this.handleGuess.bind(this)}>猜...</AtButton>
             <View className='tips'>{tips}</View>
@@ -245,14 +245,16 @@ class Index extends Component {
             </AtTimeline>
             {commentLoading && comments.length == 0 && <View style='text-align:center'>无记录</View>}
           </ScrollView>
-          <AtInput
-            name='comment'
-            type='text'
-            value={commentValue}
-            placeholder='请留言'
-            className='input'
-            onChange={this.handleComment.bind(this)}
-          />
+          {
+            isCommentOpened && <AtInput
+              name='comment'
+              type='text'
+              value={commentValue}
+              placeholder='请留言'
+              className='input'
+              onChange={this.handleComment.bind(this)}
+            />
+          }
           <AtButton className='add-comment' type='primary' onClick={this.addComment}>留言</AtButton>
         </AtFloatLayout>
         <View className='add'>

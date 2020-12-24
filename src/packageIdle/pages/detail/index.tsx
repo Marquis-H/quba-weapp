@@ -276,12 +276,12 @@ class Index extends Component {
         <AtModal isOpened={openMessage}>
           <AtModalHeader>{messageType == 'answer' ? '提问' : '回复'}</AtModalHeader>
           <AtModalContent>
-            <AtTextarea
+            {openMessage && <AtTextarea
               value={message}
               onChange={this.handleChangeMessage.bind(this)}
               maxLength={200}
               placeholder='请输入...'
-            />
+            />}
           </AtModalContent>
           <AtModalAction> <Button onClick={() => this.setState({ openMessage: false })}>取消</Button> <Button onClick={this.onSubmitMessage}>确定</Button> </AtModalAction>
         </AtModal>

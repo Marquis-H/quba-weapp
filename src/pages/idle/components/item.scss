@@ -44,6 +44,10 @@
       .title{
         font-size: 30px;
         font-weight: bold;
+        width: calc(100vw - 280px);
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
       }
 
       .desp{
