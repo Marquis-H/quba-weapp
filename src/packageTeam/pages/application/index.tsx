@@ -109,14 +109,14 @@ class Index extends Component {
       errorMessages.push("项目现状")
     }
     if (skill == '') {
-      errorMessages.push("技能要求")
+      errorMessages.push("要求")
     }
     if (skills == '') {
       errorMessages.push("拥有技能")
     }
-    if (experience == '') {
-      errorMessages.push("经验要求")
-    }
+    // if (experience == '') {
+    //   errorMessages.push("经验要求")
+    // }
     if (people == '') {
       errorMessages.push("人数")
     }
@@ -160,7 +160,7 @@ class Index extends Component {
       currentStatus,
       skill,
       skills,
-      experience,
+      // experience,
       people,
       joinEndAt
     } = this.state
@@ -195,29 +195,29 @@ class Index extends Component {
             value={people}
             onChange={this.handleChange.bind(this, 'people')}
           />
-          <View className='title'>技能要求</View>
+          <View className='title'>要求</View>
           <AtTextarea
             className='skill'
             value={skill}
             onChange={this.handleChange.bind(this, 'skill')}
             maxLength={200}
-            placeholder='请输入技能要求'
+            placeholder='请输入技能要求、经验要求、拥有技能'
           />
-          <View className='title'>经验要求</View>
+          {/* <View className='title'>经验要求</View>
           <AtTextarea
             className='experience'
             value={experience}
             onChange={this.handleChange.bind(this, 'experience')}
             maxLength={200}
             placeholder='请输入经验要求'
-          />
+          /> */}
           <View className='title'>拥有技能</View>
           <AtTextarea
-            className='skills'
+            className='skill'
             value={skills}
             onChange={this.handleChange.bind(this, 'skills')}
             maxLength={200}
-            placeholder='请输入拥有技能'
+            placeholder='请输入自己的拥有技能'
           />
           <Picker value={joinEndAt} mode='date' onChange={this.onDateChange}>
             <AtList className='category' hasBorder={false}>

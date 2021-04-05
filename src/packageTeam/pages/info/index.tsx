@@ -188,12 +188,12 @@ class Index extends Component {
                       arrow='right'
                       note={'目前队内人数 ' + (item.childrens + 1)}
                       title={'队伍' + (index + 1) + " " + (item.name ? item.name : "")}
-                      extraText='加入'
+                      extraText={item.isLock ? '已锁定' : '加入'}
                     />
                   )
                 })
               }
-              {teamList.length == 0 && <View style='text-align:center'>无队伍</View>}
+              {teamList.length == 0 && <View style='text-align:center; padding: 10px 0'>无队伍</View>}
             </AtList>
           </ScrollView>
         }

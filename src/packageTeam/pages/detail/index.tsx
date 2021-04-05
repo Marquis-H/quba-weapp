@@ -2,7 +2,7 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, ScrollView, Text } from '@tarojs/components'
-import { AtButton, AtMessage, AtList, AtListItem, AtModal } from 'taro-ui'
+import { AtTag, AtButton, AtMessage, AtList, AtListItem, AtModal } from 'taro-ui'
 import teamApi from '../../../api/team'
 import * as images from '../../../../static/images'
 import { getProfile } from '../../../actions/user'
@@ -50,6 +50,11 @@ class Index extends Component {
   }
 
   componentDidShow() {
+    this.handleFetchData()
+    this.props.onGetProfile()
+  }
+
+  handleFetchData() {
     var params = (getCurrentInstance() as any).router.params
     teamApi.teamDetail({ id: params.id }).then(res => {
       if (res.code == 0) {
@@ -62,7 +67,6 @@ class Index extends Component {
         })
       }
     })
-    this.props.onGetProfile()
   }
 
   addTeam = (id) => {
@@ -71,12 +75,31 @@ class Index extends Component {
     })
   }
 
-  onShow = (item) => {
-    console.log(item)
-    this.setState({
-      show: true,
-      application: item
+  lockTeam = (id) => {
+    var { detail } = this.state
+    teamApi.lockTeam({ aid: id }).then(res => {
+      if (res.code == 0) {
+        Taro.atMessage({
+          'message': '队伍已锁定',
+          'type': 'success',
+        })
+        detail.isLock = true
+        this.setState({
+          detail: detail
+        })
+      }
     })
+  }
+
+  onShow = (item) => {
+    const { detail } = this.state
+    const { user } = this.props
+    if (item.isSponsor || user.profile.id == item.profile.pid || user.profile.id == detail.profile.pid) {
+      this.setState({
+        show: true,
+        application: item
+      })
+    }
   }
 
   handleConfirm = () => {
@@ -86,13 +109,41 @@ class Index extends Component {
     })
   }
 
+  handleRemove = (id) => {
+    teamApi.removeTeam({ aid: id }).then(res => {
+      if (res.code == 0) {
+        if (res.data.isSponsor) {
+          Taro.navigateBack()
+          Taro.atMessage({
+            'message': '队伍解散',
+            'type': 'success',
+          })
+        } else {
+          Taro.atMessage({
+            'message': '已离开队伍',
+            'type': 'success',
+          })
+          this.handleFetchData()
+        }
+      }
+    }).finally(() => {
+      this.setState({
+        show: false,
+        application: null
+      })
+    })
+  }
+
   render() {
     const { detail, show, application } = this.state
+    const { user } = this.props
     const scrollTop = 0
     const Threshold = 20
     var isShowAdd = true
-    if (detail && detail.profile.pid == this.props.user.profile.id) {
+    var isOwner = false
+    if (detail && detail.profile.pid == user.profile.id) {
       isShowAdd = false
+      isOwner = true
     }
     return (
       <View className='container'>
@@ -108,17 +159,20 @@ class Index extends Component {
           >
             <View className='content'>
               <View className='title'>
+                {
+                  detail.isLock && <AtTag size='small' type='primary' active customStyle='margin-right:2px'>已锁定</AtTag>
+                }
                 {detail.matchInfo.title}
               </View>
               <View className='desc'>
                 现状：{detail.currentStatus}
               </View>
               <View className='desc'>
-                技能要求：{detail.skill}
+                要求：{detail.skill}
               </View>
-              <View className='desc'>
+              {/* <View className='desc'>
                 经验要求：{detail.experience}
-              </View>
+              </View> */}
               <View className='number'>
                 <Text>人数限制：{detail.people}</Text>
                 <Text style='color: #b3b3b3;margin-right:10px;float:right'>加入队伍截止时间：{detail.joinEndAt}</Text>
@@ -137,26 +191,45 @@ class Index extends Component {
                   if (item.profile.pid == this.props.user.profile.id) {
                     isShowAdd = false
                   }
-                  return (
-                    <AtListItem
-                      iconInfo={{ size: 30, color: '#6190E8', value: 'user', }}
-                      onClick={this.onShow.bind(this, item)}
-                      key={index}
-                      note={'联系方式：' + item.contact}
-                      title={item.profile.name}
-                      extraText='点击查看'
-                    />
-                  )
+                  if (user.profile.id == item.profile.pid || user.profile.id == detail.profile.pid) {
+                    return (
+                      <AtListItem
+                        iconInfo={{ size: 30, color: '#6190E8', value: 'user', }}
+                        onClick={this.onShow.bind(this, item)}
+                        key={index}
+                        note={'联系方式：' + item.contact}
+                        title={item.profile.name}
+                        extraText='点击查看'
+                      />
+                    )
+                  } else {
+                    return (
+                      <AtListItem
+                        iconInfo={{ size: 30, color: '#6190E8', value: 'user', }}
+                        key={index}
+                        note='联系方式：保密'
+                        title={item.profile.name}
+                      />
+                    )
+                  }
                 })
               }
             </AtList>
           </ScrollView>
         }
         {
-          detail && isShowAdd &&
+          detail && isShowAdd && !detail.isLock &&
           <View className='trade'>
             <AtButton type='primary' onClick={this.addTeam.bind(this, detail.id)}>
               加入队伍
+            </AtButton>
+          </View>
+        }
+        {
+          detail && isOwner && !detail.isLock &&
+          <View className='trade'>
+            <AtButton type='primary' onClick={this.lockTeam.bind(this, detail.id)}>
+              锁定队伍
             </AtButton>
           </View>
         }
@@ -165,9 +238,13 @@ class Index extends Component {
           application && <AtModal
             isOpened={show}
             title={application.profile.name + '的信息'}
-            confirmText='确认'
+            confirmText={
+              !detail.isLock && application.profile.pid == user.profile.id && user.profile.id == detail.profile.pid ? '解散' : !detail.isLock && (application.profile.pid == user.profile.id || user.profile.id == detail.profile.pid)
+                ? '离开此队伍' : ''}
+            cancelText='关闭'
             onClose={this.handleConfirm}
-            onConfirm={this.handleConfirm}
+            onCancel={this.handleConfirm}
+            onConfirm={this.handleRemove.bind(this, application.id)}
             content={`学院：${application.profile.collegeItem.title}\n\r
             专业：${application.profile.professionalItem.title}\n\r
             拥有技能：${application.skills ? application.skills : '-'}\n\r

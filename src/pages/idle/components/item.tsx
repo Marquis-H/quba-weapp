@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, Image, Text } from '@tarojs/components'
 import { AtTag, AtIcon, AtBadge } from 'taro-ui'
 import { Domain } from '../../../services/config'
+import * as images from '../../../../static/images/index';
 
 import './item.scss'
 
@@ -16,7 +17,7 @@ class Item extends Component {
 
     render() {
         const { famousPhoto, title, description, originalCost, currentCost, number, marks, isTop } = this.props.item
-
+        var famous = famousPhoto ? (Domain + famousPhoto) : images.logo
         return (
             <View className='container'>
                 <View className='post'>
@@ -26,8 +27,8 @@ class Item extends Component {
                                 <View className='at-col at-col-1 at-col--auto'>
                                     {
                                         isTop ? <AtBadge value='置顶'>
-                                            <Image mode='aspectFill' className='img' src={Domain + famousPhoto} />
-                                        </AtBadge> : <Image mode='aspectFill' className='img' src={Domain + famousPhoto} />
+                                            <Image mode='aspectFill' className='img' src={famous} />
+                                        </AtBadge> : <Image mode='aspectFill' className='img' src={famous} />
                                     }
                                 </View>
                                 <View className='at-col info'>

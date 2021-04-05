@@ -7,6 +7,7 @@ import Item from "../../../packageLove/pages/list/components/item";
 import userApi from '../../../api/user'
 import idleApi from '../../../api/idle'
 import { Domain } from '../../../services/config'
+import * as images from '../../../../static/images/index';
 
 import './index.scss'
 
@@ -143,6 +144,7 @@ class Index extends Component {
           <AtTabsPane current={this.state.current} index={0} className='tab-content'>
             {
               this.state.idleApplications.map((item, index) => {
+                var famous = item['famousPhoto'] ? (Domain + item['famousPhoto']) : images.logo
                 return (
                   <AtSwipeAction
                     key={index}
@@ -154,7 +156,7 @@ class Index extends Component {
                         <View className='content'>
                           <View className='at-row'>
                             <View className='at-col at-col-1 at-col--auto'>
-                              <Image mode='aspectFill' className='img' src={Domain + item['famousPhoto']} />
+                              <Image mode='aspectFill' className='img' src={famous} />
                             </View>
                             <View className='at-col info'>
                               <View className='title'>

@@ -227,9 +227,6 @@ class Index extends Component {
     if (currentCost == '') {
       errorMessages.push("现价")
     }
-    if (oldDeep == 0) {
-      errorMessages.push("新旧程度")
-    }
     if (contactType == -1) {
       errorMessages.push("联系方式")
     }
@@ -238,9 +235,6 @@ class Index extends Component {
     }
     if (description == '') {
       errorMessages.push("商品详情")
-    }
-    if (famousPhoto.length == 0) {
-      errorMessages.push("封面图")
     }
     if (photos.length == 0) {
       errorMessages.push("商品详情图")
@@ -293,11 +287,9 @@ class Index extends Component {
       currentCost,
       originalUrl,
       remark,
-      oldDeep,
       contactType,
       contact,
       description,
-      famousPhoto,
       photos
     } = this.state
 
@@ -333,16 +325,6 @@ class Index extends Component {
             value={number}
             onChange={this.handleChange.bind(this, 'number')}
           />
-          <View className='rate'>
-            <View className='title'>
-              新旧程度
-            </View>
-            <AtRate
-              className='oldDeep'
-              value={oldDeep}
-              onChange={this.handleChange.bind(this, 'oldDeep')}
-            />
-          </View>
           <AtInput
             required
             name='originalCost'
@@ -406,19 +388,6 @@ class Index extends Component {
             onChange={this.handleChange.bind(this, 'description')}
             maxLength={200}
             placeholder='请输入商品详情'
-          />
-        </AtForm>
-        <AtForm>
-          <View className='photo-title'>
-            上传商品封面图
-          </View>
-          <AtImagePicker
-            className={famousPhoto.length == 0 ? 'famous-add' : 'famous-remove'}
-            multiple={false}
-            length={4}
-            count={1}
-            files={famousPhoto}
-            onChange={this.onFamousPhotoChange.bind(this)}
           />
         </AtForm>
         <AtForm>

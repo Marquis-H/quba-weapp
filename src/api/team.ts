@@ -32,9 +32,27 @@ function addTeam(params = {}) {
     return request.post('/team/add', params, 'application/json')
 }
 
+/**
+ * 从队伍中移除或解散
+ * @param params 
+ */
+function removeTeam(params = {}) {
+    return request.post('/team/remove', params, 'application/json')
+}
+
+/**
+ * 锁定队伍
+ * @param params 
+ */
+function lockTeam(params = {}) {
+    return request.post('/team/lock', params, 'application/json')
+}
+
 export default {
     getTeamList,
     create,
     teamDetail,
-    addTeam
+    addTeam,
+    removeTeam,
+    lockTeam
 }

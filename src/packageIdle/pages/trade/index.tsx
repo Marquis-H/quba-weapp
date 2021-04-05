@@ -2,7 +2,7 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View } from '@tarojs/components'
-import { AtList, AtListItem, AtButton, AtModal } from "taro-ui"
+import { AtList, AtListItem, AtButton, AtModal, AtToast } from "taro-ui"
 import idleApi from '../../../api/idle'
 
 import './index.scss'
@@ -60,6 +60,20 @@ class Index extends Component {
   toViewContactType = () => {
     this.setState({
       viewContactType: !this.state.viewContactType
+    })
+  }
+
+  toCopyContactType = () => {
+    const { detail, idleType } = this.state
+    Taro.setClipboardData({
+      data: idleType == 'sale' ? detail.profile.mobile : detail.application.contact,
+      success() {
+        Taro.showToast({
+          title: '已复制',
+          icon: 'success',
+          duration: 2000
+        })
+      }
     })
   }
 
@@ -130,9 +144,11 @@ class Index extends Component {
             }
             <AtModal
               isOpened={viewContactType}
-              confirmText='确认'
+              confirmText='复制号码'
+              cancelText='关闭'
+              onCancel={this.toViewContactType}
               onClose={this.toViewContactType}
-              onConfirm={this.toViewContactType}
+              onConfirm={this.toCopyContactType}
               content={idleType == 'sale' ? ("买家手机联系方式：" + detail.profile.mobile) : ("卖家" + detail.application.contactType + "联系方式：" + detail.application.contact)}
             />
           </View>
