@@ -119,6 +119,10 @@ class Index extends Component {
             'type': 'success',
           })
         } else {
+          this.setState({
+            show: false,
+            application: null
+          })
           Taro.atMessage({
             'message': '已离开队伍',
             'type': 'success',
@@ -126,11 +130,6 @@ class Index extends Component {
           this.handleFetchData()
         }
       }
-    }).finally(() => {
-      this.setState({
-        show: false,
-        application: null
-      })
     })
   }
 
@@ -222,6 +221,13 @@ class Index extends Component {
           <View className='trade'>
             <AtButton type='primary' onClick={this.addTeam.bind(this, detail.id)}>
               加入队伍
+            </AtButton>
+          </View>
+        }
+        {
+          detail && !isShowAdd && !isOwner && <View className='trade'>
+            <AtButton disabled type='primary'>
+              已加入队伍
             </AtButton>
           </View>
         }
