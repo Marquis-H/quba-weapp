@@ -167,7 +167,7 @@ class Index extends Component {
                 现状：{detail.currentStatus}
               </View>
               <View className='desc'>
-                要求：{detail.skill}
+                要求：{detail.skill ? detail.skill : '-'}
               </View>
               {/* <View className='desc'>
                 经验要求：{detail.experience}

@@ -108,12 +108,12 @@ class Index extends Component {
     if (currentStatus == '') {
       errorMessages.push("项目现状")
     }
-    if (skill == '') {
-      errorMessages.push("要求")
-    }
-    if (skills == '') {
-      errorMessages.push("拥有技能")
-    }
+    // if (skill == '') {
+    //   errorMessages.push("要求")
+    // }
+    // if (skills == '') {
+    //   errorMessages.push("拥有技能")
+    // }
     // if (experience == '') {
     //   errorMessages.push("经验要求")
     // }
@@ -195,7 +195,7 @@ class Index extends Component {
             value={people}
             onChange={this.handleChange.bind(this, 'people')}
           />
-          <View className='title'>要求</View>
+          <View className='title-nr'>要求</View>
           <AtTextarea
             className='skill'
             value={skill}
@@ -211,7 +211,7 @@ class Index extends Component {
             maxLength={200}
             placeholder='请输入经验要求'
           /> */}
-          <View className='title'>拥有技能</View>
+          <View className='title-nr'>拥有技能</View>
           <AtTextarea
             className='skill'
             value={skills}
