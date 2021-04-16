@@ -94,7 +94,7 @@ class Index extends Component {
   onShow = (item) => {
     const { detail } = this.state
     const { user } = this.props
-    if (item.isSponsor || user.profile.id == item.profile.pid || user.profile.id == detail.profile.pid) {
+    if (item.isSponsor || user.profile.pid == item.profile.pid || user.profile.pid == detail.profile.pid) {
       this.setState({
         show: true,
         application: item
@@ -140,7 +140,7 @@ class Index extends Component {
     const Threshold = 20
     var isShowAdd = true
     var isOwner = false
-    if (detail && detail.profile.pid == user.profile.id) {
+    if (detail && detail.profile.pid == user.profile.pid) {
       isShowAdd = false
       isOwner = true
     }
@@ -187,10 +187,10 @@ class Index extends Component {
               />
               {
                 detail.children.map((item, index) => {
-                  if (item.profile.pid == this.props.user.profile.id) {
+                  if (item.profile.pid == this.props.user.profile.pid) {
                     isShowAdd = false
                   }
-                  if (user.profile.id == item.profile.pid || user.profile.id == detail.profile.pid) {
+                  if (user.profile.pid == item.profile.pid || user.profile.pid == detail.profile.pid) {
                     return (
                       <AtListItem
                         iconInfo={{ size: 30, color: '#6190E8', value: 'user', }}
@@ -245,7 +245,7 @@ class Index extends Component {
             isOpened={show}
             title={application.profile.name + '的信息'}
             confirmText={
-              !detail.isLock && application.profile.pid == user.profile.id && user.profile.id == detail.profile.pid ? '解散' : !detail.isLock && (application.profile.pid == user.profile.id || user.profile.id == detail.profile.pid)
+              !detail.isLock && application.profile.pid == user.profile.pid && user.profile.pid == detail.profile.pid ? '解散' : !detail.isLock && (application.profile.pid == user.profile.pid || user.profile.pid == detail.profile.pid)
                 ? '离开此队伍' : ''}
             cancelText='关闭'
             onClose={this.handleConfirm}
