@@ -73,9 +73,9 @@ export default {
     navigationBarTextStyle: 'black',
   },
   tabBar: {
-    selectedColor: '#f7454e',
+    selectedColor: '#486572',
     backgroundColor: '#ffffff',
-    color: '#8a8a8a',
+    color: '#bfbfbf',
     list: [
       {
         pagePath: 'pages/index/index',

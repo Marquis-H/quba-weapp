@@ -105,8 +105,8 @@ class Index extends Component {
     })
   }
 
-  toModule = (e) => {
-    switch (e.value) {
+  toModule = (value) => {
+    switch (value) {
       case '二手交易':
         this.toIdle()
         break;
@@ -154,27 +154,12 @@ class Index extends Component {
             }
           </Swiper>
         </View>
-        <AtGrid className='grid' onClick={this.toModule} hasBorder={false} columnNum={4} data={
-          [
-            {
-              image: images.idleIcon,
-              value: '二手交易'
-            },
-            {
-              image: images.teamIcon,
-              value: '比赛组队'
-            },
-            {
-              image: images.loveIcon,
-              value: '互动表白墙'
-            },
-            {
-              image: images.discussionIcon,
-              value: '讨论区'
-            }
-          ]
-        }
-        />
+        <View className='icon'>
+          <Image onClick={this.toModule.bind(this, "二手交易")} src={images.idleIcon} className='item' />
+          <Image onClick={this.toModule.bind(this, "比赛组队")} src={images.teamIcon} className='item' />
+          <Image onClick={this.toModule.bind(this, "互动表白墙")} src={images.loveIcon} className='item' />
+          <Image onClick={this.toModule.bind(this, "讨论区")} src={images.discussionIcon} className='item' />
+        </View>
         {
           topicBanners.map((item, index) => {
             return <View className='pkg-bg' key={index}>
