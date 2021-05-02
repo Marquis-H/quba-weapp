@@ -212,10 +212,10 @@ class Index extends Component {
               <View className='number'>
                 <View className='at-row'>
                   <View className='at-col at-col-8' style='display: flex;'>
-                    <Text>新旧程度：</Text><AtRate
+                    {/* <Text>新旧程度：</Text><AtRate
                       className='oldDeep'
                       value={detail.oldDeep}
-                    />
+                    /> */}
                   </View>
                   <View className='at-col at-col-2'>
                     数量：x{detail.number}
