@@ -16,8 +16,8 @@ class Item extends Component {
     state = {}
 
     render() {
-        const { famousPhoto, title, description, originalCost, currentCost, number, marks, isTop } = this.props.item
-        var famous = famousPhoto ? (Domain + famousPhoto) : images.logo
+        const { title, description, originalCost, currentCost, number, marks, isTop, photos } = this.props.item
+        var famous = photos.length > 0 ? (photos[0]['url']) : images.logo
         return (
             <View className='container'>
                 <View className='post'>

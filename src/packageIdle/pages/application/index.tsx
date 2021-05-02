@@ -396,7 +396,7 @@ class Index extends Component {
           </View>
           <AtImagePicker
             length={4}
-            count={1}
+            count={9}
             files={photos}
             onChange={this.onPhotoChange.bind(this)}
           />
