@@ -125,7 +125,7 @@ class Index extends Component {
               <View className='action'>
                 <AtButton type='primary' onClick={this.toViewContactType}>查看对方联系方式</AtButton>
                 {
-                  detail.status == "Doing" && <AtButton type='primary' disabled>等待对方确认交易完成</AtButton>
+                  detail.status == "Doing" && <AtButton type='primary' onClick={this.handleChangeTrade.bind(this, detail.id, 'Done', '确认交易完成?')}>确认交易完成</AtButton>
                 }
               </View>
             }
@@ -133,9 +133,6 @@ class Index extends Component {
               idleType != 'sale' &&
               <View className='action'>
                 <AtButton type='primary' onClick={this.toViewContactType}>查看对方联系方式</AtButton>
-                {
-                  detail.status == "Doing" && <AtButton type='primary' onClick={this.handleChangeTrade.bind(this, detail.id, 'Done', '确认交易完成?')}>确认交易完成</AtButton>
-                }
                 <AtButton type='primary' onClick={this.toApplication.bind(this, detail.application.id)}>查看商品详情</AtButton>
                 {
                   detail.status == "Doing" && <AtButton onClick={this.handleChangeTrade.bind(this, detail.id, 'Cancel', '取消交易?')}>取消交易</AtButton>

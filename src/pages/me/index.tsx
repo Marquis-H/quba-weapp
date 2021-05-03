@@ -197,11 +197,11 @@ class Index extends Component {
             <View className='footer'>
               <View className='my-btn'>
                 <Text className='text'>{orders}</Text>
-                <Text className='text'>总交易数</Text>
+                <Text className='text'>交易数</Text>
               </View>
               <View className='my-btn'>
                 <Text className='text'>{applications}</Text>
-                <Text className='text'>总发布商品数</Text>
+                <Text className='text'>发布商品数</Text>
               </View>
               <View className='my-btn'>
                 <Text className='text'>{teams}</Text>

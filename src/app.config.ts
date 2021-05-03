@@ -68,9 +68,9 @@ export default {
   ],
   window: {
     backgroundTextStyle: 'dark',
-    navigationBarBackgroundColor: '#ffffff',
+    navigationBarBackgroundColor: '#486572',
     navigationBarTitleText: '有寻',
-    navigationBarTextStyle: 'black',
+    navigationBarTextStyle: 'white',
   },
   tabBar: {
     selectedColor: '#486572',
@@ -99,7 +99,7 @@ export default {
   },
   plugins: {
     wxparserPlugin: {
-      version: "0.3.1",
+      version: "0.4.0",
       provider: "wx9d4d4ffa781ff3ac"
     }
   },
