@@ -2,12 +2,13 @@ import Taro, { getCurrentInstance } from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Swiper, SwiperItem, Image, ScrollView, Text, Button } from '@tarojs/components'
-import { AtButton, AtTag, AtRate, AtMessage, AtIcon, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtTextarea } from 'taro-ui'
+import { AtButton, AtTag, AtMessage, AtIcon, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtTextarea } from 'taro-ui'
 import idleApi from '../../../api/idle'
 import idleMessageApi from '../../../api/idleMessage'
 import markApi from '../../../api/mark'
 import { Domain } from '../../../services/config'
 import Message from './components/message'
+import { getProfile } from '../../../actions/user'
 
 import './index.scss'
 
@@ -26,9 +27,7 @@ type PageStateProps = {
 }
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
+  onGetProfile: () => void
 }
 
 type PageOwnProps = {}
@@ -41,7 +40,11 @@ interface Index {
   props: IProps;
 }
 
-@connect(({ user }) => ({ user }), () => ({}))
+@connect(({ user }) => ({ user }), (dispatch) => ({
+  onGetProfile() {
+    dispatch(getProfile())
+  },
+}))
 class Index extends Component {
   state = {
     detail: null as any,
@@ -55,6 +58,7 @@ class Index extends Component {
   }
 
   componentDidMount() {
+    this.props.onGetProfile()
     var params = (getCurrentInstance() as any).router.params
     idleApi.getIdleDetail({ id: params.id }).then(res => {
       if (res.code == 0) {
