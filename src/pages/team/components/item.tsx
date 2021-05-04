@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, Image, Text } from '@tarojs/components'
 import { AtTag, AtIcon, AtBadge } from 'taro-ui'
 import * as images from '../../../../static/images/index';
+import { Domain } from '../../../services/config'
 
 import './item.scss'
 
@@ -19,7 +20,7 @@ class Item extends Component {
 
     render() {
         const { onlineOrOffline, types } = this.state
-        const { title, endAt, tabs, matchCategory, peopleLimit, qualificationLimit, marks, isTop } = this.props.item
+        const { title, endAt, tabs, matchCategory, peopleLimit, qualificationLimit, marks, isTop, cover } = this.props.item
 
         return (
             <View className='container'>
@@ -30,7 +31,7 @@ class Item extends Component {
                                 <View className='at-col at-col-1 at-col--auto'>
                                     {
                                         isTop ? <AtBadge value='置顶'>
-                                            <Image mode='aspectFill' className='img' src={images.logo} />
+                                            <Image mode='aspectFill' className='img' src={cover.data ? (Domain + cover["data"]["file"]) : images.logo} />
                                         </AtBadge> : <Image mode='aspectFill' className='img' src={images.logo} />
                                     }
                                 </View>

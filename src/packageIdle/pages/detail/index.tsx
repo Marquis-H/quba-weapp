@@ -162,6 +162,18 @@ class Index extends Component {
     })
   }
 
+  toRecord = (id) => {
+    if (id != null) {
+      Taro.navigateTo({
+        url: "/packageIdle/pages/trade/index?id=" + id
+      })
+    } else {
+      Taro.navigateTo({
+        url: "/packageMe/pages/trade/index"
+      })
+    }
+  }
+
   render() {
     const { detail, isMark, messages, messageLoading, openMessage, messageType, message } = this.state
     const { user } = this.props
@@ -268,11 +280,25 @@ class Index extends Component {
                   <Text style='display: block;font-size: 12px'>提问</Text>
                 </View>
               }
-              <View className='at-col' style='padding:0'>
-                <AtButton type='primary' disabled={detail.status == 'Online' ? false : true} onClick={this.addTrade}>
-                  {detail.status == 'Online' ? "发起交易" : (detail.status == 'Doing' ? "交易中" : "下架")}
-                </AtButton>
-              </View>
+              {
+                detail.status == 'Online' && detail.profile.pid != user.profile.pid && detail.idleRecord && detail.idleRecord.status == 'Doing'
+                  ? <View className='at-col' style='padding:0'>
+                    <AtButton type='primary' onClick={this.toRecord.bind(this, detail.idleRecord.id)}>
+                      查看交易记录
+                  </AtButton>
+                  </View>
+                  :
+                  (detail.profile.pid == user.profile.pid ?
+                    <View className='at-col' style='padding:0'>
+                      <AtButton type='primary' onClick={this.toRecord.bind(this, null)}>
+                        查看交易记录
+                      </AtButton>
+                    </View> : <View className='at-col' style='padding:0'>
+                      <AtButton type='primary' disabled={detail.status == 'Online' ? false : true} onClick={this.addTrade}>
+                        {detail.status == 'Online' ? "发起交易" : (detail.status == 'Doing' ? "交易中" : "下架")}
+                      </AtButton>
+                    </View>)
+              }
             </View>
           </View>
         }

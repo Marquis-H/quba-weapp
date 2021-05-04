@@ -103,15 +103,15 @@ class Index extends Component {
   handleCommit = () => {
     const { genderSelector, gender, taGender, nickname, name, taName, content } = this.state
     var errorMessages = [] as any
-    if (nickname == '') {
-      errorMessages.push("昵称") // 昵称、真名、TA的名字、内容
-    }
+    // if (nickname == '') {
+    //   errorMessages.push("昵称") // 昵称、真名、TA的名字、内容
+    // }
     if (name == '') {
       errorMessages.push("真名") // 昵称、真名、TA的名字、内容
     }
-    if (taName == '') {
-      errorMessages.push("TA的名字") // 昵称、真名、TA的名字、内容
-    }
+    // if (taName == '') {
+    //   errorMessages.push("TA的名字") // 昵称、真名、TA的名字、内容
+    // }
     if (content == '') {
       errorMessages.push("内容") // 昵称、真名、TA的名字、内容
     }
@@ -148,11 +148,11 @@ class Index extends Component {
   }
 
   render() {
-    const { nickname, name, gender, genderSelector, taName, taGender, content } = this.state
+    const { name, content } = this.state
     return (
       <View className='container'>
         <AtDivider content='你的信息' fontColor='#ffb400' lineColor='#ffb400' />
-        <View className='input-container'>
+        {/* <View className='input-container'>
           <Text className='text' style='color: #f0134d'>* </Text>
           <Text className='text' style='margin-left: 0'>你的昵称</Text>
           <AtInput
@@ -162,7 +162,7 @@ class Index extends Component {
             className='input'
             onChange={this.handleNicknameChange.bind(this)}
           />
-        </View>
+        </View> */}
         <View className='input-container'>
           <Text className='text' style='color: #f0134d'>* </Text>
           <Text className='text' style='margin-left: 0'>你的真名</Text>
@@ -171,18 +171,19 @@ class Index extends Component {
             value={name}
             type='text'
             className='input'
+            placeholder='用于猜名字，可自由填写'
             onChange={this.handleNameChange.bind(this)}
           />
         </View>
-        <Picker rangeKey='title' value={gender} mode='selector' range={genderSelector} onChange={this.onGenderChange} className='picker-container'>
+        {/* <Picker rangeKey='title' value={gender} mode='selector' range={genderSelector} onChange={this.onGenderChange} className='picker-container'>
           <Text className='text'>性别</Text>
           <View className='picker'>
             {genderSelector[gender].title}
             <AtIcon value='chevron-right' size='28' color='#DCDCDC'></AtIcon>
           </View>
-        </Picker>
+        </Picker> */}
         <AtDivider content='TA的信息' fontColor='#ffb400' lineColor='#ffb400' />
-        <View className='input-container'>
+        {/* <View className='input-container'>
           <Text className='text' style='color: #f0134d'>* </Text>
           <Text className='text' style='margin-left: 0'>TA的名字、选择性别</Text>
           <AtInput
@@ -192,14 +193,14 @@ class Index extends Component {
             className='input'
             onChange={this.handleTaNameChange.bind(this)}
           />
-        </View>
-        <Picker rangeKey='title' value={taGender} mode='selector' range={genderSelector} onChange={this.onTaGenderChange} className='picker-container'>
+        </View> */}
+        {/* <Picker rangeKey='title' value={taGender} mode='selector' range={genderSelector} onChange={this.onTaGenderChange} className='picker-container'>
           <Text className='text'>性别</Text>
           <View className='picker'>
             {genderSelector[taGender].title}
             <AtIcon value='chevron-right' size='28' color='#DCDCDC'></AtIcon>
           </View>
-        </Picker>
+        </Picker> */}
         <View className='input-container'>
           <Text className='text' style='color: #f0134d'>* </Text>
           <Text className='text' style='margin-left: 0'>表白的内容</Text>

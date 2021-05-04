@@ -144,7 +144,7 @@ class Index extends Component {
           <AtTabsPane current={this.state.current} index={0} className='tab-content'>
             {
               this.state.idleApplications.map((item, index) => {
-                var famous = item['famousPhoto'] ? (Domain + item['famousPhoto']) : images.logo
+                var famous = (item['photos'] as any).length > 0 ? (item['photos'][0]['url']) : images.logo
                 return (
                   <AtSwipeAction
                     key={index}
