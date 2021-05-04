@@ -32,7 +32,7 @@ class Item extends Component {
                                     {
                                         isTop ? <AtBadge value='置顶'>
                                             <Image mode='aspectFill' className='img' src={cover.data ? (Domain + cover["data"]["file"]) : images.logo} />
-                                        </AtBadge> : <Image mode='aspectFill' className='img' src={images.logo} />
+                                        </AtBadge> : <Image mode='aspectFill' className='img' src={cover.data ? (Domain + cover["data"]["file"]) : images.logo} />
                                     }
                                 </View>
                                 <View className='at-col info'>

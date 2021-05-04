@@ -174,6 +174,17 @@ class Index extends Component {
     }
   }
 
+  preview = (photos) => {
+    var data = [] as any;
+    photos.forEach(v => {
+      data.push(v['url'])
+    });
+    Taro.previewImage({
+      current: '', // 当前显示图片的http链接
+      urls: data // 需要预览的图片http链接列表
+    })
+  }
+
   render() {
     const { detail, isMark, messages, messageLoading, openMessage, messageType, message } = this.state
     const { user } = this.props
@@ -194,7 +205,7 @@ class Index extends Component {
             <Swiper className='main-slider' indicatorDots autoplay interval={3000} duration={100}>
               {
                 detail.photos.map(item => {
-                  return <SwiperItem key={item['title']}>
+                  return <SwiperItem key={item['title']} onClick={this.preview.bind(this, detail.photos)}>
                     <View className='banner-item'>
                       <Image
                         mode='aspectFill'

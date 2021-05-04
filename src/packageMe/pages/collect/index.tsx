@@ -5,6 +5,7 @@ import { View, Image, Text } from '@tarojs/components'
 import { AtTabs, AtTabsPane, AtSwipeAction, AtTag } from 'taro-ui'
 import userApi from '../../../api/user'
 import { Domain } from '../../../services/config'
+import * as images from '../../../../static/images/index';
 
 import './index.scss'
 
@@ -117,12 +118,13 @@ class Index extends Component {
             {
               idleApplications.map((item, index) => {
                 const idleApplication = item.idleApplication
+                var famous = idleApplication.photos.length > 0 ? (idleApplication.photos[0]['url']) : images.logo
                 return (
                   <AtSwipeAction key={index} autoClose onClick={this.handleRemove.bind(this, item.id, 'idle_application')} options={options} className='swipe'>
                     <View onClick={this.toIdleApplicationDetail.bind(this, idleApplication.id, 'idle_application')} className='content idle'>
                       <View className='at-row'>
                         <View className='at-col at-col-1 at-col--auto'>
-                          <Image mode='aspectFill' className='img' src={Domain + idleApplication.famousPhoto} />
+                          <Image mode='aspectFill' className='img' src={famous} />
                         </View>
                         <View className='at-col info'>
                           <View className='content'>

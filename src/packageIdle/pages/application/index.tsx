@@ -233,9 +233,9 @@ class Index extends Component {
     if (contact == '') {
       errorMessages.push("联系内容")
     }
-    if (description == '') {
-      errorMessages.push("商品详情")
-    }
+    // if (description == '') {
+    //   errorMessages.push("商品详情")
+    // }
     if (photos.length == 0) {
       errorMessages.push("商品详情图")
     }
