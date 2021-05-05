@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import React, { Component, ComponentClass } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, Navigator } from '@tarojs/components'
-import { AtIcon, AtTabs, AtTabsPane, AtFab } from 'taro-ui';
+import { AtIcon, AtTabs, AtTabsPane, AtFab, AtActivityIndicator } from 'taro-ui';
 import Item from './components/item'
 import idleApi from '../../api/idle'
 
@@ -47,8 +47,8 @@ class Index extends Component {
 
   componentWillMount() {
     this.setState({
-      tabList: [{ id: 0, title: '全部' }],
-      current: 0
+      tabList: this.state.tabList,
+      current: this.state.current
     })
     idleApi.getIdleCategory().then(res => {
       if (res.code == 0) {
@@ -60,12 +60,13 @@ class Index extends Component {
   }
 
   componentDidShow() {
-    this.handleGetIdleList(0)
+    this.handleGetIdleList(this.state.current)
   }
 
   handleGetIdleList(cId) {
     this.setState({
-      loading: false
+      loading: false,
+      list: []
     })
     idleApi.getIdleList({ cId: cId }).then(res => {
       if (res.code == 0) {
@@ -122,6 +123,7 @@ class Index extends Component {
                     })
                   }
                   {loading && list.length == 0 && <View style='text-align: center'>无记录</View>}
+                  <AtActivityIndicator content='加载中...' mode='center' isOpened={!loading}></AtActivityIndicator>
                 </AtTabsPane>
               )
             })
