@@ -43,6 +43,10 @@ interface Index {
   props: IProps;
 }
 
+declare class wx {
+  static getUserProfile(any): any;
+}
+
 @connect(({ user }) => ({ user }), (dispatch) => ({
   onGetProfile() {
     dispatch(getProfile())
@@ -86,55 +90,60 @@ class Index extends Component {
     });
   }
 
-  handleLogin(e) {
-    // 確認授權
-    if (e.detail.errMsg == "getUserInfo:ok") {
-      var userInfo = e.detail.userInfo;
-      var that = this
-      this.setState({
-        // avatarUrl: userInfo.avatarUrl,
-        // username: userInfo.nickName,
-        isOpened: false,
-        isLogin: true
-      });
-      // 登錄
-      Taro.login({
-        success: res => {
-          if (res.code) {
-            // 获取openid
-            auth.getOpenId({ code: res.code }).then(r => {
-              const { openid } = r.data;
-              auth
-                .bindAccount({
-                  openid: openid,
-                  nickname: userInfo.nickName,
-                  avatar: userInfo.avatarUrl
-                })
-                .then(re => {
-                  setToken(re.data.token);
-                  setBind(true);
-                  Taro.showModal({
-                    title: "完善個人資料",
-                    content:
-                      "为了获得更好体验\n请完善个人资料",
-                    confirmText: "去填写",
-                    showCancel: false
-                  }).then(() => {
-                    Taro.navigateTo({ url: "/packageMe/pages/profile/edit/index" });
+  handleLogin() {
+    wx.getUserProfile({
+      desc: '用于完善用户资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+      success: (json) => {
+        var userInfo = json.userInfo;
+        var that = this
+        this.setState({
+          // avatarUrl: userInfo.avatarUrl,
+          // username: userInfo.nickName,
+          isOpened: false,
+          isLogin: true
+        });
+        // 登錄
+        Taro.login({
+          success: res => {
+            if (res.code) {
+              // 获取openid
+              auth.getOpenId({ code: res.code }).then(r => {
+                const { openid } = r.data;
+                auth
+                  .bindAccount({
+                    openid: openid,
+                    nickname: userInfo.nickName,
+                    avatar: userInfo.avatarUrl
+                  })
+                  .then(re => {
+                    setToken(re.data.token);
+                    setBind(true);
+                    Taro.showModal({
+                      title: "完善個人資料",
+                      content:
+                        "为了获得更好体验\n请完善个人资料",
+                      confirmText: "去填写",
+                      showCancel: false
+                    }).then(() => {
+                      Taro.navigateTo({ url: "/packageMe/pages/profile/edit/index" });
+                    });
+                    // 获取用户信息
+                    that.onHandleRefreshProfile()
+                  })
+                  .catch(err => {
+                    console.log("登录失败！" + err.message);
                   });
-                  // 获取用户信息
-                  that.onHandleRefreshProfile()
-                })
-                .catch(err => {
-                  console.log("登录失败！" + err.message);
-                });
-            });
-          } else {
-            console.log("登录失败！" + res.errMsg);
+              });
+            } else {
+              console.log("登录失败！" + res.errMsg);
+            }
           }
-        }
-      });
-    }
+        });
+      },
+      fail: () => {
+        //console.log(res)
+      }
+    })
   }
 
   handleClose() {
@@ -295,12 +304,11 @@ class Index extends Component {
         >
           <Button
             type='primary'
-            openType='getUserInfo'
-            onGetUserInfo={this.handleLogin.bind(this)}
+            onClick={this.handleLogin.bind(this)}
             className='wechat-btn'
           >
             <FontAwesome family='brands' name='weixin' size={20} color='#fff' />
-            <Text>微信用户快速登录</Text>
+            <Text> 微信用户快速登录</Text>
           </Button>
           {/* <View
             className='login-m'
