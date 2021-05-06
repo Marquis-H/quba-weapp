@@ -57,9 +57,6 @@ class Index extends Component {
         })
       }
     })
-  }
-
-  componentDidShow() {
     this.handleGetIdleList(this.state.current)
   }
 
